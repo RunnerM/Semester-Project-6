@@ -11,6 +11,8 @@ public class Context : DbContext
         optionsBuilder.UseSqlServer(
             "Server=tcp:db-server-sep6.database.windows.net,1433;Initial Catalog=movei-db;Persist Security Info=False;User ID=sqladmin;Password=#6WNhfMG54UJ7kIr5LGQeqznCC8c*KxMf^VVVW6kA$cfStLm2;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
     }
+    // sqladmin password:
+    // 7DaM5vEa!1q550H8#pFtH
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
