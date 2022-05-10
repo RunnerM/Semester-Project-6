@@ -19,8 +19,10 @@ public class Context : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Configure<Movie>(
-            m => m.HasKey(m => m.Id),
-            m => m.HasMany<UserToplists>().WithOne()
+            m => m.HasKey(m => m.Id)
+        );
+        modelBuilder.Configure<User>(
+            u => u.HasKey(user => user.Id)
         );
 
         modelBuilder.Configure<UserToplists>(
@@ -43,8 +45,6 @@ public class Context : DbContext
                 .IsRequired()
         );
 
-        modelBuilder.Configure<User>(
-            u => u.HasKey(user => user.Id)
-        );
+        
     }
 }

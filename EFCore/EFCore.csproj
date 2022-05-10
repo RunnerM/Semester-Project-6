@@ -17,13 +17,14 @@
         <Optimize>true</Optimize>
         <EnvironmentName>MigrateProd</EnvironmentName>
     </PropertyGroup>
-
+    
     <ItemGroup>
       <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.4" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.4">
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite.Core" Version="6.0.4" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.4" />
     </ItemGroup>
 
