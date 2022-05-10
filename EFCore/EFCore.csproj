@@ -7,8 +7,28 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MigrateStaging|AnyCPU'">
+        <DefineConstants>TRACE;MIGRATE_STAGING</DefineConstants>
+        <Optimize>true</Optimize>
+        <EnvironmentName>MigrateStaging</EnvironmentName>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MigrateProd|AnyCPU'">
+        <DefineConstants>TRACE;MIGRATE_PROD</DefineConstants>
+        <Optimize>true</Optimize>
+        <EnvironmentName>MigrateProd</EnvironmentName>
+    </PropertyGroup>
+
     <ItemGroup>
-      <Folder Include="Utils" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.4" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.4">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
+      <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.4" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Data\Data.csproj" />
     </ItemGroup>
 
 </Project>
