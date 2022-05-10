@@ -18,6 +18,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="Components\UI\People" />
       <Folder Include="Data\Services" />
     </ItemGroup>
 
