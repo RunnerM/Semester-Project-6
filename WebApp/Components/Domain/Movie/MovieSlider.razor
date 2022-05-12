@@ -1,3 +1,4 @@
+@using Data
 <MudText Color="Color.Info">Category</MudText>
 <div class="d-flex flex-row justify-space-around">
     <MudButton Variant="Variant.Filled" Color="Color.Transparent">Back</MudButton>
@@ -7,8 +8,10 @@
     <MovieCoverView Title="Batman" PictureSrc="https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcRBkxgl2A2PhE_6tklFLT0bxn5NLhvhsnpXGhmXBt_zotrlVHmo"/>
     <MovieCoverView Title="Batman" PictureSrc="https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcRBkxgl2A2PhE_6tklFLT0bxn5NLhvhsnpXGhmXBt_zotrlVHmo"/>
     <MovieCoverView Title="Batman" PictureSrc="https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcRBkxgl2A2PhE_6tklFLT0bxn5NLhvhsnpXGhmXBt_zotrlVHmo"/>
+    <MovieCoverView Title="Batman" PictureSrc="https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcRBkxgl2A2PhE_6tklFLT0bxn5NLhvhsnpXGhmXBt_zotrlVHmo"/>
     <MudButton Variant="Variant.Filled" Color="Color.Transparent">Forward</MudButton>
 </div>
 @code {
+    List<Movie> Movies { get; set; }
 }
 
