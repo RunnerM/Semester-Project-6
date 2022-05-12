@@ -6,17 +6,6 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
     </PropertyGroup>
-
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MigrateStaging|AnyCPU'">
-        <DefineConstants>TRACE;MIGRATE_STAGING</DefineConstants>
-        <Optimize>true</Optimize>
-        <EnvironmentName>MigrateStaging</EnvironmentName>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MigrateProd|AnyCPU'">
-        <DefineConstants>TRACE;MIGRATE_PROD</DefineConstants>
-        <Optimize>true</Optimize>
-        <EnvironmentName>MigrateProd</EnvironmentName>
-    </PropertyGroup>
     
     <ItemGroup>
       <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.4" />
