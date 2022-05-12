@@ -1,4 +1,6 @@
 ﻿@inherits LayoutComponentBase
+@using Microsoft.AspNetCore.Authorization
+
 
 
 <MudLayout>
@@ -8,15 +10,22 @@
             <MudAutocomplete T="string" Label="Search.." SearchFunc="@searchf" AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Default"/>
         </MudItem>
         <MudSpacer/>
-        <MudMenu FullWidth="true">
-            <ActivatorContent>
-                <MudChip Icon="@Icons.Material.Filled.Person" Color="Color.Primary"> Profile </MudChip>
-            </ActivatorContent>
-            <ChildContent>
-                <MudMenuItem>Settings</MudMenuItem>
-                <MudMenuItem>Sign Out</MudMenuItem>
-            </ChildContent>
-        </MudMenu>
+            <AuthorizeView>
+                <Authorized>
+                    <MudMenu FullWidth="true">
+                                <ActivatorContent>
+                                    <MudChip Icon="@Icons.Material.Filled.Person" Color="Color.Primary"> Profile </MudChip>
+                                </ActivatorContent>
+                                <ChildContent>
+                                    <MudMenuItem>Settings</MudMenuItem>
+                                    <MudMenuItem>Sign Out</MudMenuItem>
+                                </ChildContent>
+                            </MudMenu>
+                </Authorized>
+                <NotAuthorized>
+                    <MudButton Variant="Variant.Filled" href="/login"  Color="Color.Warning"> <MudIcon Icon="@Icons.Filled.AppRegistration"/> Register </MudButton>
+                </NotAuthorized>
+            </AuthorizeView>
     </MudAppBar>
     <MudDrawer @bind-Open="@open" Elevation="1" Color="Color.Primary">
         <MudDrawerHeader>

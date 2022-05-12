@@ -1,6 +1,10 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using MudBlazor.Services;
+
+using EFCore;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +12,30 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddMudServices();
+
+
+
+builder.Services.AddAuthentication()
+    .AddGoogle(googleOptions =>
+    {
+    googleOptions.ClientId = builder.Configuration["Authentication:Google:ClientId"];
+    googleOptions.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
+    googleOptions.Events.OnCreatingTicket = ctx =>
+    {
+        string username = ctx.User.GetProperty("name").ToString();
+
+        ctx.Identity.AddClaim(new Claim("name", username));
+
+        return Task.CompletedTask;
+    };
+    }
+            ).AddCookie(options =>
+    {
+        options.Cookie.Name = "Test";
+        options.LoginPath = "/login";
+        
+    }
+        );
 
 var app = builder.Build();
 
@@ -24,6 +52,9 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
