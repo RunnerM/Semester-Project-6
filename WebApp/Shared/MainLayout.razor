@@ -18,12 +18,12 @@
                                 </ActivatorContent>
                                 <ChildContent>
                                     <MudMenuItem>Settings</MudMenuItem>
-                                    <MudMenuItem>Sign Out</MudMenuItem>
+                                    <MudMenuItem><LoginControl/></MudMenuItem>
                                 </ChildContent>
                             </MudMenu>
                 </Authorized>
                 <NotAuthorized>
-                    <MudButton Variant="Variant.Filled" href="/login"  Color="Color.Warning"> <MudIcon Icon="@Icons.Filled.AppRegistration"/> Register </MudButton>
+                   <LoginControl/>
                 </NotAuthorized>
             </AuthorizeView>
     </MudAppBar>
