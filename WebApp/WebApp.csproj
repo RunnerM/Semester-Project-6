@@ -2,10 +2,22 @@
 
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
+        <Configuration>MigrateStaging,MigrateProd</Configuration>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
         <UserSecretsId>fc945dc9-7259-4ee5-9f18-c00f2a4a3948</UserSecretsId>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MigrateStaging|AnyCPU'">
+        <DefineConstants>TRACE;MIGRATE_STAGING</DefineConstants>
+        <Optimize>true</Optimize>
+        <EnvironmentName>MigrateStaging</EnvironmentName>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MigrateProd|AnyCPU'">
+        <DefineConstants>TRACE;MIGRATE_PROD</DefineConstants>
+        <Optimize>true</Optimize>
+        <EnvironmentName>MigrateProd</EnvironmentName>
     </PropertyGroup>
 
     <ItemGroup>
