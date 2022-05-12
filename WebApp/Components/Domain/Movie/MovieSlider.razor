@@ -1,16 +1,60 @@
 @using Data
-<MudText Color="Color.Info">Category</MudText>
-<div class="d-flex flex-row justify-space-around">
-    <MudButton Variant="Variant.Filled" Color="Color.Transparent">Back</MudButton>
-    <MovieCoverView Title="Batman" PictureSrc="https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcRBkxgl2A2PhE_6tklFLT0bxn5NLhvhsnpXGhmXBt_zotrlVHmo"/>
-    <MovieCoverView Title="Batman" PictureSrc="https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcRBkxgl2A2PhE_6tklFLT0bxn5NLhvhsnpXGhmXBt_zotrlVHmo"/>
-    <MovieCoverView Title="Batman" PictureSrc="https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcRBkxgl2A2PhE_6tklFLT0bxn5NLhvhsnpXGhmXBt_zotrlVHmo"/>
-    <MovieCoverView Title="Batman" PictureSrc="https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcRBkxgl2A2PhE_6tklFLT0bxn5NLhvhsnpXGhmXBt_zotrlVHmo"/>
-    <MovieCoverView Title="Batman" PictureSrc="https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcRBkxgl2A2PhE_6tklFLT0bxn5NLhvhsnpXGhmXBt_zotrlVHmo"/>
-    <MovieCoverView Title="Batman" PictureSrc="https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcRBkxgl2A2PhE_6tklFLT0bxn5NLhvhsnpXGhmXBt_zotrlVHmo"/>
-    <MovieCoverView Title="Batman" PictureSrc="https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcRBkxgl2A2PhE_6tklFLT0bxn5NLhvhsnpXGhmXBt_zotrlVHmo"/>
-    <MudButton Variant="Variant.Filled" Color="Color.Transparent">Forward</MudButton>
-</div>
-@code {
+@using global::Data.TMDBDomain
+@using WebApp.Data.Services.TMDB
+@inject ITMDBService TmdbService
+
+
+<MudText Color="Color.Default" Typo="Typo.h3">@Category</MudText>
+<MudDivider/>
+
+@if (_movies == null)
+{
+    <MudProgressLinear Color="Color.Primary" Indeterminate="true" />
+}
+else
+{
+    <div class="d-flex flex-row justify-space-around">
+        <MudIconButton Icon="@Icons.Material.Filled.ArrowBack" aria-label="delete" OnClick="OnBackward"></MudIconButton>
+        @foreach (var movie in activeMovies)
+        {
+            <MovieCoverView Title="@movie.Title" PictureSrc="@movie.PosterPath"/>
+        }
+        <MudIconButton Icon="@Icons.Material.Filled.ArrowForward" aria-label="delete" OnClick="OnForward"></MudIconButton>
+    </div>
 }
 
+
+@code {
+    [Parameter]
+    public string Category { get; set; }
+
+    private List<TMDBMovie> _movies;    
+    private List<TMDBMovie> activeMovies;// The movies to display
+    private int currentIndex;// The current index of the active movies
+
+    protected override async Task OnInitializedAsync()
+    {
+        _movies = await TmdbService.GetTopRatedMovies();
+        activeMovies = _movies.Take(6).ToList();
+        currentIndex = 0;
+    }
+
+    private void OnForward(MouseEventArgs obj)
+    {
+        if (currentIndex == _movies.Count - 6)
+            return;
+        activeMovies = _movies.Skip(currentIndex + 6).Take(6).ToList();
+        currentIndex += 6;
+        StateHasChanged();
+    }
+
+    private void OnBackward()
+    {
+        if (currentIndex == 0)
+            return;
+        activeMovies = _movies.Skip(currentIndex - 6).Take(6).ToList();
+        currentIndex -= 6;
+        StateHasChanged();
+    }
+
+}

@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using MudBlazor.Services;
+using WebApp.Data.Services.TMDB;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddMudServices();
+AddServices(builder);
 
 var app = builder.Build();
 
@@ -29,3 +31,10 @@ app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
 
 app.Run();
+
+static void AddServices(WebApplicationBuilder builder)
+{
+    builder.Services.AddTransient<ITMDBClient,TMDBClient>();
+    builder.Services.AddTransient<ITMDBService,TMDBService>();
+}
+    
