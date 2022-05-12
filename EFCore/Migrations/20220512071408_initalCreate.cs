@@ -16,7 +16,7 @@ namespace EFCore.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Year = table.Column<int>(type: "int", nullable: false),
-                    ExternalId = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    TMDBExternalId = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -29,8 +29,8 @@ namespace EFCore.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    password = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    GoogleExternalId = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {

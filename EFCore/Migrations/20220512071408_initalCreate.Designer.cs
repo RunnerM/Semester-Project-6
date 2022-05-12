@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EFCore.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20220510105128_initalCreate")]
+    [Migration("20220512071408_initalCreate")]
     partial class initalCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -30,7 +30,7 @@ namespace EFCore.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("ExternalId")
+                    b.Property<string>("TMDBExternalId")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -52,15 +52,15 @@ namespace EFCore.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("GoogleExternalId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("password")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

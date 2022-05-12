@@ -28,7 +28,7 @@ namespace EFCore.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("ExternalId")
+                    b.Property<string>("TMDBExternalId")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -50,15 +50,15 @@ namespace EFCore.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("GoogleExternalId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("password")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
