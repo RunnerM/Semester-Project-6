@@ -35,6 +35,6 @@ app.Run();
 static void AddServices(WebApplicationBuilder builder)
 {
     builder.Services.AddTransient<ITMDBClient,TMDBClient>();
-    builder.Services.AddTransient<ITMDBService,TMDBService>();
+    builder.Services.AddTransient<IDataService,DataService>();
 }
     

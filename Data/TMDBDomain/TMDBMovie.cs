@@ -26,4 +26,6 @@ public class TMDBMovie
     public double VoteAverage { get; set; }
     [JsonPropertyName("vote_count")]
     public int VoteCount { get; set; }
+    
+    //Todo extend with more properties
 }

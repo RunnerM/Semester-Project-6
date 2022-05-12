@@ -2,11 +2,11 @@ using Data.TMDBDomain;
 
 namespace WebApp.Data.Services.TMDB;
 
-public class TMDBService : ITMDBService
+public class DataService : IDataService
 {
     private readonly ITMDBClient _tmdbClient;
     
-    public TMDBService(ITMDBClient tmdbClient)
+    public DataService(ITMDBClient tmdbClient)
     {
         _tmdbClient = tmdbClient;
     }
@@ -27,5 +27,23 @@ public class TMDBService : ITMDBService
         foreach (var movie in movies)
             movie.PosterPath = "https://image.tmdb.org/t/p/original/" + movie.PosterPath;
         return movies;
+    }
+    
+    public async Task<List<TMDBPersonInList>> GetPopularPersonal()
+    {
+        var people = await _tmdbClient.GetPopularPeople();
+        foreach (var person in people)
+            person.ProfilePath = "https://image.tmdb.org/t/p/original/" + person.ProfilePath;
+        return people;
+    }
+
+    public Task<TMDBMovie> GetMovieById(int MovieId)
+    {
+        return _tmdbClient.GetMovieById(MovieId);
+    }
+
+    public Task<TMDBPerson> GetPersonById(int PersonId)
+    {
+        return  _tmdbClient.GetPersonById(PersonId);
     }
 }
