@@ -8,12 +8,23 @@
 }
 else
 {
-    <MudPaper Elevation="3" Outlined="true">
+    <MudText Typo="Typo.h3" Color="Color.Default" Style="padding-bottom: 10px">@_movie.Title</MudText>
+    <MudDivider  Vertical="true" Light="true"/>
+    <MudPaper Elevation="3">
         <MudStack Row="false">
-            <MudImage Src="@_movie.BackdropPath"  ObjectFit="ObjectFit.ScaleDown" Height="400"></MudImage>
+            <MudImage Src="@_movie.BackdropPath" ObjectFit="ObjectFit.Cover" Height="400" Style="border-radius: 5px"></MudImage>
             <MudStack Row="true">
-                <MudText Typo="Typo.h5" Color="Color.Default">@_movie.Title</MudText>
-                <MudText Typo="Typo.body1" Color="Color.Default">Release date: @_movie.ReleaseDate</MudText>
+                <MudText Typo="Typo.h4" Color="Color.Default" Style="padding-left: 10px">Release Date:</MudText>
+                <MudText Typo="Typo.h4" Color="Color.Default" Style="padding-right:8px">@_movie.ReleaseDate</MudText>
+                <MudSpacer/>
+                <MudText Typo="Typo.h4" Color="Color.Default" Style="padding-left: 10px">Rating:</MudText>
+                <MudText Typo="Typo.h4" Color="Color.Default" Style="padding-right:8px">@_movie.VoteAverage</MudText>
+                <MudText Typo="Typo.h4" Color="Color.Default" Style="padding-left: 10px">Votes:</MudText>
+                <MudText Typo="Typo.h4" Color="Color.Default" Style="padding-right:8px">@_movie.VoteCount</MudText>
+            </MudStack>
+            <MudStack Row="true">
+                <MudText Typo="Typo.h4" Color="Color.Default" Style="padding-left: 10px">Overview:</MudText>
+                <MudText Typo="Typo.h6" Color="Color.Default" Style="padding-top:8px">@_movie.Overview</MudText>
             </MudStack>
         </MudStack>
     </MudPaper>
