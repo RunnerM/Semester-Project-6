@@ -2,22 +2,9 @@
 
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
-        <Configuration>MigrateStaging,MigrateProd</Configuration>
+        <RuntimeIdentifiers>win10-x64;linux-x64</RuntimeIdentifiers>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
-        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-        <UserSecretsId>fc945dc9-7259-4ee5-9f18-c00f2a4a3948</UserSecretsId>
-    </PropertyGroup>
-
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MigrateStaging|AnyCPU'">
-        <DefineConstants>TRACE;MIGRATE_STAGING</DefineConstants>
-        <Optimize>true</Optimize>
-        <EnvironmentName>MigrateStaging</EnvironmentName>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MigrateProd|AnyCPU'">
-        <DefineConstants>TRACE;MIGRATE_PROD</DefineConstants>
-        <Optimize>true</Optimize>
-        <EnvironmentName>MigrateProd</EnvironmentName>
     </PropertyGroup>
 
     <ItemGroup>
@@ -28,11 +15,6 @@
       <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="6.0.4" />
       <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.14.0" />
       <PackageReference Include="MudBlazor" Version="6.0.10" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Components\UI\People" />
-      <Folder Include="Data\Services" />
     </ItemGroup>
 
 </Project>

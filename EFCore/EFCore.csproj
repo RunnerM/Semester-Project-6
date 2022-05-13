@@ -4,18 +4,9 @@
         <OutputType>Exe</OutputType>
         <TargetFramework>net6.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
+        <DefineConstants>DEBUG;TRACE</DefineConstants>
+        <RuntimeIdentifiers>win7-x64;win7-x86;win8-x64;win8-x86;win81-x64;win81-x86;win10-x64;win10-x86</RuntimeIdentifiers>
         <Nullable>enable</Nullable>
-    </PropertyGroup>
-
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MigrateStaging|AnyCPU'">
-        <DefineConstants>TRACE;MIGRATE_STAGING</DefineConstants>
-        <Optimize>true</Optimize>
-        <EnvironmentName>MigrateStaging</EnvironmentName>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MigrateProd|AnyCPU'">
-        <DefineConstants>TRACE;MIGRATE_PROD</DefineConstants>
-        <Optimize>true</Optimize>
-        <EnvironmentName>MigrateProd</EnvironmentName>
     </PropertyGroup>
     
     <ItemGroup>

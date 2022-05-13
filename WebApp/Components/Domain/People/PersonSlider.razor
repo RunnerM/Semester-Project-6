@@ -1,13 +1,12 @@
-@using Data
-@using global::Data.TMDBDomain
 @using WebApp.Data.Services.TMDB
+@using global::Data.TMDBDomain
 @inject IDataService DataService
 
 
 <MudText Color="Color.Default" Typo="Typo.h3">@Category</MudText>
 <MudDivider/>
 
-@if (_movies == null)
+@if (_people == null)
 {
     <MudProgressLinear Color="Color.Primary" Indeterminate="true" />
 }
@@ -15,9 +14,9 @@ else
 {
     <div class="d-flex flex-row justify-space-around">
         <MudIconButton Icon="@Icons.Material.Filled.ArrowBack" aria-label="delete" OnClick="OnBackward"></MudIconButton>
-        @foreach (var movie in activeMovies)
+        @foreach (var person in activePeople)
         {
-            <MovieCoverView Title="@movie.Title" PictureSrc="@movie.PosterPath" Id="@movie.Id.ToString()"/>
+            <PeopleCoverView Title="@person.Name" PictureSrc="@person.ProfilePath"/>
         }
         <MudIconButton Icon="@Icons.Material.Filled.ArrowForward" aria-label="delete" OnClick="OnForward"></MudIconButton>
     </div>
@@ -28,22 +27,22 @@ else
     [Parameter]
     public string Category { get; set; }
 
-    private List<TMDBMovie> _movies;    
-    private List<TMDBMovie> activeMovies;// The movies to display
+    private List<TMDBPersonInList> _people;    
+    private List<TMDBPersonInList> activePeople;// The movies to display
     private int currentIndex;// The current index of the active movies
 
     protected override async Task OnInitializedAsync()
     {
-        _movies = await DataService.GetTopRatedMovies();
-        activeMovies = _movies.Take(6).ToList();
+        _people = await DataService.GetPopularPersonal();
+        activePeople = _people.Take(6).ToList();
         currentIndex = 0;
     }
 
     private void OnForward(MouseEventArgs obj)
     {
-        if (currentIndex == _movies.Count - 6)
+        if (currentIndex == _people.Count - 6)
             return;
-        activeMovies = _movies.Skip(currentIndex + 6).Take(6).ToList();
+        activePeople = _people.Skip(currentIndex + 6).Take(6).ToList();
         currentIndex += 6;
         StateHasChanged();
     }
@@ -52,7 +51,7 @@ else
     {
         if (currentIndex == 0)
             return;
-        activeMovies = _movies.Skip(currentIndex - 6).Take(6).ToList();
+        activePeople = _people.Skip(currentIndex - 6).Take(6).ToList();
         currentIndex -= 6;
         StateHasChanged();
     }
