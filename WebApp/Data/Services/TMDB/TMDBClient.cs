@@ -11,32 +11,32 @@ public class TMDBClient : ITMDBClient
     private HttpClient _client;
 
     private const string BaseUrl = "https://api.themoviedb.org/3/";
-    private const string ApiKey = "api_key=53002af11ac265ef6a04fec95b8092b2";
+    private const string ApiKey = "?api_key=53002af11ac265ef6a04fec95b8092b2";
 
     public TMDBClient()
     {
         _client = new HttpClient();
     }
 
-    public async Task<List<TMDBMovie>> GetTopRatedMovies()
+    public async Task<List<TMDBMovie>> GetTopRatedMoviesAsync()
     {
-        var result= await _client.GetAsync(BaseUrl+"movie/top_rated?" + ApiKey);
+        var result= await _client.GetAsync(BaseUrl+"movie/top_rated" + ApiKey);
         result.EnsureSuccessStatusCode();
         var json = await result.Content.ReadAsStringAsync();
         var movies = JsonSerializer.Deserialize<TMDBPage<TMDBMovie>>(json);
         return movies.Results.ToList();
     }
 
-    public async Task<List<TMDBPersonInList>> GetPopularPeople()
+    public async Task<List<TMDBPersonInList>> GetPopularPeopleAsync()
     {
-        var result = await _client.GetAsync(BaseUrl + "person/popular?" + ApiKey);
+        var result = await _client.GetAsync(BaseUrl + "person/popular" + ApiKey);
         result.EnsureSuccessStatusCode();
         var json = await result.Content.ReadAsStringAsync();
         var movies = JsonSerializer.Deserialize<TMDBPage<TMDBPersonInList>>(json);
         return movies.Results.ToList();
     }
 
-    public async Task<TMDBMovie> GetMovieById(int MovieId)
+    public async Task<TMDBMovie> GetMovieByIdAsync(int MovieId)
     {
         var result = await _client.GetAsync(BaseUrl + "movie/"+ MovieId + ApiKey);
         result.EnsureSuccessStatusCode();
@@ -45,7 +45,7 @@ public class TMDBClient : ITMDBClient
         return movie;
     }
 
-    public async Task<TMDBPerson> GetPersonById(int PersonId)
+    public async Task<TMDBPerson> GetPersonByIdAsync(int PersonId)
     {
         var result = await _client.GetAsync(BaseUrl + "person/"+ PersonId + ApiKey);
         result.EnsureSuccessStatusCode();

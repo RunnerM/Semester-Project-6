@@ -33,7 +33,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        _people = await DataService.GetPopularPersonal();
+        _people = await DataService.GetPopularPersonalAsync();
         activePeople = _people.Take(6).ToList();
         currentIndex = 0;
     }

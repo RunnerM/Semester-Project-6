@@ -1,17 +1,35 @@
 @using global::Data.TMDBDomain
-<MudPaper Elevation="3" Outlined="true">
-    <MudText Typo="Typo.h5" Color="Color.Default">Title</MudText>
-    <MudText Typo="Typo.body1" Color="Color.Default">Year:</MudText>
-</MudPaper>
+@using WebApp.Data.Services.TMDB
+@inject IDataService DataService 
+
+@if (_movie == null)
+{
+    <MudSkeleton Height="300px" Width="500px"/>
+}
+else
+{
+    <MudPaper Elevation="3" Outlined="true">
+        <MudStack Row="false">
+            <MudImage Src="@_movie.BackdropPath"  ObjectFit="ObjectFit.ScaleDown" Height="400"></MudImage>
+            <MudStack Row="true">
+                <MudText Typo="Typo.h5" Color="Color.Default">@_movie.Title</MudText>
+                <MudText Typo="Typo.body1" Color="Color.Default">Release date: @_movie.ReleaseDate</MudText>
+            </MudStack>
+        </MudStack>
+    </MudPaper>
+}
+
+
 
 @code {
     private TMDBMovie _movie;
-    
+
     [Parameter]
     public int movieId { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        
+        _movie = await DataService.GetMovieByIdAsync(movieId);
     }
+
 }

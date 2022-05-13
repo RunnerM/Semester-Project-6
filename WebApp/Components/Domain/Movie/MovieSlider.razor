@@ -34,7 +34,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        _movies = await DataService.GetTopRatedMovies();
+        _movies = await DataService.GetTopRatedMoviesAsync();
         activeMovies = _movies.Take(6).ToList();
         currentIndex = 0;
     }

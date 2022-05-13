@@ -1,5 +1,6 @@
 @page "/Movie/{id}"
-<h3>MoviePage:@Id</h3>
+
+<MovieDetailCard movieId="@_movieId"></MovieDetailCard>
 
 
 
@@ -7,4 +8,11 @@
     [Parameter]
     public string Id { get; set; }
     
+    private int _movieId;
+
+    protected override void OnInitialized()
+    {
+        _movieId = int.Parse(Id);
+    }
+
 }

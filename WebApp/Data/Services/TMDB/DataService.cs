@@ -10,40 +10,35 @@ public class DataService : IDataService
     {
         _tmdbClient = tmdbClient;
     }
-    
-    public Task GetMoviesAsync(string searchTerm)
-    {
-        throw new NotImplementedException();
-    }
 
-    public Task GetMovieAsync(int id)
+    public async Task<List<TMDBMovie>> GetTopRatedMoviesAsync()
     {
-        throw new NotImplementedException();
-    }
-
-    public async Task<List<TMDBMovie>> GetTopRatedMovies()
-    {
-        var movies = await _tmdbClient.GetTopRatedMovies();
+        var movies = await _tmdbClient.GetTopRatedMoviesAsync();
         foreach (var movie in movies)
             movie.PosterPath = "https://image.tmdb.org/t/p/original/" + movie.PosterPath;
         return movies;
     }
     
-    public async Task<List<TMDBPersonInList>> GetPopularPersonal()
+    public async Task<List<TMDBPersonInList>> GetPopularPersonalAsync()
     {
-        var people = await _tmdbClient.GetPopularPeople();
+        var people = await _tmdbClient.GetPopularPeopleAsync();
         foreach (var person in people)
             person.ProfilePath = "https://image.tmdb.org/t/p/original/" + person.ProfilePath;
         return people;
     }
 
-    public Task<TMDBMovie> GetMovieById(int MovieId)
+    public async Task<TMDBMovie> GetMovieByIdAsync(int MovieId)
     {
-        return _tmdbClient.GetMovieById(MovieId);
+        var movie=await _tmdbClient.GetMovieByIdAsync(MovieId);
+        movie.PosterPath = "https://image.tmdb.org/t/p/original/" + movie.PosterPath;
+        movie.BackdropPath = "https://image.tmdb.org/t/p/original/" + movie.BackdropPath;
+        return movie;
     }
 
-    public Task<TMDBPerson> GetPersonById(int PersonId)
+    public async Task<TMDBPerson> GetPersonByIdAsync(int PersonId)
     {
-        return  _tmdbClient.GetPersonById(PersonId);
+        var person = await _tmdbClient.GetPersonByIdAsync(PersonId);
+        person.ProfilePath = "https://image.tmdb.org/t/p/original/" + person.ProfilePath;
+        return person;
     }
 }

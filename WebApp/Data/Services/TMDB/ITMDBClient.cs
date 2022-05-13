@@ -4,8 +4,8 @@ namespace WebApp.Data.Services.TMDB;
 
 public interface ITMDBClient
 {
-    public Task<List<TMDBMovie>> GetTopRatedMovies();
-    public Task<List<TMDBPersonInList>> GetPopularPeople();
-    public Task<TMDBMovie> GetMovieById(int MovieId);
-    public Task<TMDBPerson> GetPersonById(int PersonId);
+    public Task<List<TMDBMovie>> GetTopRatedMoviesAsync();
+    public Task<List<TMDBPersonInList>> GetPopularPeopleAsync();
+    public Task<TMDBMovie> GetMovieByIdAsync(int MovieId);
+    public Task<TMDBPerson> GetPersonByIdAsync(int PersonId);
 }
