@@ -1,0 +1,24 @@
+﻿@inject NavigationManager NavigationManager
+
+<MudPaper MaxHeight="1920px" MaxWidth="1080px" Elevation="3">
+    
+        <MudImage Fluid=true ObjectFit="ObjectFit.Contain" Src="@PictureSrc"/>
+        <MudText>@Title</MudText>
+    
+</MudPaper>
+
+@code {
+    [Parameter]
+    public string PictureSrc { get; set; }
+    
+    [Parameter]
+    public string Title { get; set; }
+    
+    [Parameter]
+    public string Id { get; set; }
+
+    private void OnClickMovie()
+    {
+        NavigationManager.NavigateTo("/Movie/" + Id);
+    }
+}

@@ -1,0 +1,50 @@
+﻿@using Data
+@using global::Data.TMDBDomain
+@using WebApp.Data.Services.TMDB
+@inject IDataService DataService
+@inject NavigationManager NavigationManager
+
+<MudGrid>
+    
+@if (_movies == null)
+{
+    <MudItem xs="12" md="12" lg="12">
+    <MudProgressLinear Color="Color.Primary" Indeterminate="true" />
+    </MudItem>
+}
+else
+{
+
+<MudItem xs="12" md="12" lg="12"  Class="d-flex flex-column mud-width-full ">
+    <div class=full-height>
+    <MudCarousel  ItemsSource="@currentMovies" @bind-SelectedIndex="currentIndex"  ShowArrows="true" ShowBullets="true" AutoCycle="false">
+        
+	    <ItemTemplate>
+            <MovieCarouselComponent Title="@context.Title" PictureSrc="@context.BackdropPath" Id="@context.Id.ToString()"/>
+	    </ItemTemplate>
+        
+    </MudCarousel>
+    </div>
+</MudItem>
+
+}
+
+
+
+
+<h3>MovieCarousel</h3>
+
+</MudGrid>
+@code {
+
+    private List<TMDBMovie> _movies;
+    private List<TMDBMovie> currentMovies;// The movies to display
+    private int currentIndex;// The current index of the active movies
+
+    protected override async Task OnInitializedAsync()
+    {
+        _movies = await DataService.GetTrendingMovies();
+        currentMovies = _movies.Take(4).ToList();
+        currentIndex = 0;
+    }
+}

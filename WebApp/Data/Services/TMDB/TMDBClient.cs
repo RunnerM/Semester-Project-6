@@ -53,4 +53,13 @@ public class TMDBClient : ITMDBClient
         var person = JsonSerializer.Deserialize<TMDBPerson>(json);
         return person;
     }
+
+    public async Task<List<TMDBMovie>> GetTrendingWeeklyMovies()
+    {
+        var result = await _client.GetAsync(BaseUrl + "trending/movie/week?" + ApiKey);
+        result.EnsureSuccessStatusCode();
+        var json = await result.Content.ReadAsStringAsync();
+        var movies = JsonSerializer.Deserialize<TMDBPage<TMDBMovie>>(json);
+        return movies.Results.ToList();
+    }
 }
