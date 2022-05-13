@@ -53,4 +53,13 @@ public class TMDBClient : ITMDBClient
         var person = JsonSerializer.Deserialize<TMDBPerson>(json);
         return person;
     }
+
+    public async Task<TMDBCast> GetCastByMovieIdAsync(int MovieId)
+    {
+        var result = await _client.GetAsync(BaseUrl + "movie/"+ MovieId+"/credits" + ApiKey);
+        result.EnsureSuccessStatusCode();
+        var json = await result.Content.ReadAsStringAsync();
+        var cast = JsonSerializer.Deserialize<TMDBCast>(json);
+        return cast;
+    }
 }

@@ -41,7 +41,7 @@ else
 
     private void OnForward(MouseEventArgs obj)
     {
-        if (currentIndex == _movies.Count - 6)
+        if (currentIndex >= _movies.Count - 6)
             return;
         activeMovies = _movies.Skip(currentIndex + 6).Take(6).ToList();
         currentIndex += 6;

@@ -45,4 +45,11 @@ public class TMDBPerson
     
     [JsonPropertyName("homepage")]
     public string? Homepage { get; set; }
+    
+    [JsonPropertyName("job")]
+    public string? Job { get; set; }
+    
+    [JsonPropertyName("original_name")]
+    public string? OriginalName { get; set; }
+
 }

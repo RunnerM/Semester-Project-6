@@ -40,7 +40,7 @@ else
 
     private void OnForward(MouseEventArgs obj)
     {
-        if (currentIndex == _people.Count - 6)
+        if (currentIndex >= _people.Count - 6)
             return;
         activePeople = _people.Skip(currentIndex + 6).Take(6).ToList();
         currentIndex += 6;
