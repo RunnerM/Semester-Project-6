@@ -1,13 +1,13 @@
-﻿@inherits LayoutComponentBase
-@using Microsoft.AspNetCore.Authorization
-
-
+﻿@using WebApp.Data.Services.TMDB
+@inherits LayoutComponentBase
+@inject IDataService DataService
+@inject NavigationManager NavigationManager
 
 <MudLayout>
     <MudAppBar Elevation="1">
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@ToggleDrawer"/>
         <MudItem Style="padding-bottom:22px">
-            <MudAutocomplete T="string" Label="Search.." SearchFunc="@searchf" AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Default"/>
+            <MudAutocomplete T="string" SearchFunc="@SearchFunc" AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Default" OnKeyDown="OnEnter" Value="@_searchTerm"/>
         </MudItem>
         <MudSpacer/>
             <AuthorizeView>
@@ -19,7 +19,7 @@
                 </NotAuthorized>
             </AuthorizeView>
     </MudAppBar>
-    <MudDrawer @bind-Open="@open" Elevation="1" Color="Color.Primary">
+    <MudDrawer @bind-Open="@_open" Elevation="1" Color="Color.Primary">
         <MudDrawerHeader>
             <MudText Typo="Typo.h6"> <MudIcon Icon="@Icons.Material.Filled.Api" Color="Color.Info"/>Media Platform</MudText>
         </MudDrawerHeader>
@@ -35,24 +35,28 @@
 
 
 @code{
-    bool open = false;
+    private bool _open = false;
+    private string _searchTerm = "";
 
     void ToggleDrawer()
     {
-        open = !open;
+        _open = !_open;
+    }
+    
+    private async Task<IEnumerable<string>> SearchFunc(string value)
+    {
+        if (string.IsNullOrEmpty(value))
+            return Array.Empty<string>();
+        var movies = await DataService.SearchMovieByTermAsync(value);
+        return movies.Results.Select(x=>x.Title).ToArray();
     }
 
-    //This will be 'done' when we have the context.
-    private async Task<IEnumerable<string>> searchf(string value)
+    private void OnEnter(KeyboardEventArgs obj)
     {
-    // In real life use an asynchronous function for fetching data from an api.
-        await Task.Delay(5);
-
-    // if text is null or empty, don't return values (drop-down will not open)
-        if (string.IsNullOrEmpty(value))
-            return new string[0];
-    //return context.Where(x => x.Contains(value, StringComparison.InvariantCultureIgnoreCase));
-        return new string[0];
+        if (obj.Key == "Enter")
+        {
+            NavigationManager.NavigateTo("/search/" + _searchTerm);
+        }
     }
 
 }

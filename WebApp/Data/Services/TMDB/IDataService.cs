@@ -11,5 +11,7 @@ public interface IDataService
     public Task<TMDBPerson> GetPersonByIdAsync(int PersonId);
     
     public Task<TMDBCast> GetCastByMovieIdAsync(int MovieId);
+    
+    public Task<TMDBPage<TMDBMovie>> SearchMovieByTermAsync(string SearchTerm);
 
 }

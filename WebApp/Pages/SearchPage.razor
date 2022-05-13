@@ -1,0 +1,8 @@
+@page "/search/{SearchTerm}"
+<h3>@SearchTerm</h3>
+
+@code {
+    [Parameter]
+    public string SearchTerm { get; set; }
+    
+}

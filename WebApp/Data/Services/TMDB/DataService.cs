@@ -48,6 +48,8 @@ public class DataService : IDataService
     public async Task<TMDBCast> GetCastByMovieIdAsync(int MovieId)
     {
         var cast= await _tmdbClient.GetCastByMovieIdAsync(MovieId);
+        cast.cast=cast.cast.DistinctBy(x=>x.Name).ToList();
+        cast.crew=cast.crew.DistinctBy(x=>x.Name).ToList();
         cast.cast.ForEach(x =>
         {
             if (x.ProfilePath==null)
@@ -64,5 +66,16 @@ public class DataService : IDataService
         });
         
         return cast;
+    }
+
+    public async Task<TMDBPage<TMDBMovie>> SearchMovieByTermAsync(string SearchTerm)
+    {
+        var movies = await _tmdbClient.SearchMovieByTermAsync(SearchTerm);
+        movies.Results.ForEach(x =>
+        {
+            x.PosterPath = "https://image.tmdb.org/t/p/original/" + x.PosterPath;
+            x.BackdropPath = "https://image.tmdb.org/t/p/original/" + x.BackdropPath;
+        });
+        return movies;
     }
 }
