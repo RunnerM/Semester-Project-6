@@ -1,4 +1,6 @@
 ﻿@inherits LayoutComponentBase
+@using Microsoft.AspNetCore.Authorization
+
 
 
 <MudLayout>
@@ -8,15 +10,14 @@
             <MudAutocomplete T="string" Label="Search.." SearchFunc="@searchf" AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Default"/>
         </MudItem>
         <MudSpacer/>
-        <MudMenu FullWidth="true">
-            <ActivatorContent>
-                <MudChip Icon="@Icons.Material.Filled.Person" Color="Color.Primary"> Profile </MudChip>
-            </ActivatorContent>
-            <ChildContent>
-                <MudMenuItem>Settings</MudMenuItem>
-                <MudMenuItem>Sign Out</MudMenuItem>
-            </ChildContent>
-        </MudMenu>
+            <AuthorizeView>
+                <Authorized>
+                    <LoginControl/>
+                </Authorized>
+                <NotAuthorized>
+                   <LoginControl/>
+                </NotAuthorized>
+            </AuthorizeView>
     </MudAppBar>
     <MudDrawer @bind-Open="@open" Elevation="1" Color="Color.Primary">
         <MudDrawerHeader>

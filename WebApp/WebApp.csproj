@@ -17,9 +17,4 @@
       <PackageReference Include="MudBlazor" Version="6.0.10" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Components\UI\People" />
-      <Folder Include="Data\Services" />
-    </ItemGroup>
-
 </Project>
