@@ -4,17 +4,19 @@
 @inject HttpClient Http
 @if (User.Identity.Name != null)
 {
-    <img src="@Avatar" />
-    <b>You are logged in as: @GivenName @Surname</b>
-    <a class="ml-md-auto btn btn-primary"
-       href="/Logout"
-       target="_top">Logout</a>
+    <MudMenu FullWidth="true">
+                                <ActivatorContent>
+                                    <MudChip Icon="@Icons.Material.Filled.Person" Color="Color.Primary"> @GivenName </MudChip>
+                                </ActivatorContent>
+                                <ChildContent>
+                                    <MudMenuItem>Settings</MudMenuItem>
+                                    <MudMenuItem Href="/Logout" Target="_top">Log out</MudMenuItem>
+                                </ChildContent>
+                            </MudMenu>
 }
 else
 {
-    <a class="ml-md-auto btn btn-primary"
-       href="/Login"
-       target="_top">Login</a>
+    <MudButton Href="/Login" Target="_top" Variant="Variant.Filled" StartIcon="@Icons.Custom.Brands.Google" Color="Color.Error" Size="Size.Large">Sign in</MudButton>
 }
 @code {
     private ClaimsPrincipal User;
@@ -40,30 +42,30 @@ else
             {
                 GivenName = User.Identity.Name;
             }
-            // Try to get the Surname
-            var surname =
-                _httpContextAccessor.HttpContext.User
-                .FindFirst(ClaimTypes.Surname);
-            if (surname != null)
-            {
-                Surname = surname.Value;
-            }
-            else
-            {
-                Surname = "";
-            }
-            // Try to get Avatar
-            var avatar =
-            _httpContextAccessor.HttpContext.User
-            .FindFirst("urn:google:image");
-            if (avatar != null)
-            {
-                Avatar = avatar.Value;
-            }
-            else
-            {
-                Avatar = "";
-            }
+            //// Try to get the Surname
+            //var surname =
+            //    _httpContextAccessor.HttpContext.User
+            //    .FindFirst(ClaimTypes.Surname);
+            //if (surname != null)
+            //{
+            //    Surname = surname.Value;
+            //}
+            //else
+            //{
+            //    Surname = "";
+            //}
+            //// Try to get Avatar
+            //var avatar =
+            //_httpContextAccessor.HttpContext.User
+            //.FindFirst("urn:google:image");
+            //if (avatar != null)
+            //{
+            //    Avatar = avatar.Value;
+            //}
+            //else
+            //{
+            //    Avatar = "";
+            //}
         }
         catch { }
     }

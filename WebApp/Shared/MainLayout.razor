@@ -12,15 +12,7 @@
         <MudSpacer/>
             <AuthorizeView>
                 <Authorized>
-                    <MudMenu FullWidth="true">
-                                <ActivatorContent>
-                                    <MudChip Icon="@Icons.Material.Filled.Person" Color="Color.Primary"> Profile </MudChip>
-                                </ActivatorContent>
-                                <ChildContent>
-                                    <MudMenuItem>Settings</MudMenuItem>
-                                    <MudMenuItem><LoginControl/></MudMenuItem>
-                                </ChildContent>
-                            </MudMenu>
+                    <LoginControl/>
                 </Authorized>
                 <NotAuthorized>
                    <LoginControl/>

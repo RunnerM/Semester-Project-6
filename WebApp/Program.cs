@@ -22,6 +22,8 @@ builder.Services.AddAuthentication().AddGoogle(options =>
 {
     options.ClientId = builder.Configuration["Google:ClientId"];
     options.ClientSecret = builder.Configuration["Google:ClientSecret"];
+
+    //This is to get the profile picture and name.
     options.ClaimActions.MapJsonKey("urn:google:profile", "link");
     options.ClaimActions.MapJsonKey("urn:google:image", "picture");
 });
