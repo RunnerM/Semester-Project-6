@@ -33,6 +33,7 @@ public class Context : DbContext
         modelBuilder.Configure<User>(
             u => u.HasKey(user => user.Id)
         );
+        modelBuilder.Entity<User>().Navigation(x => x.TopLists).AutoInclude();
 
         modelBuilder.Configure<UserToplists>(
             tp => tp.HasKey(
@@ -53,5 +54,8 @@ public class Context : DbContext
                 .Property(tp => tp.TopListIndex)
                 .IsRequired()
         );
+        modelBuilder.Entity<UserToplists>().Navigation(x => x.Movie).AutoInclude();
+
+
     }
 }
