@@ -6,10 +6,10 @@ using Xunit;
 namespace Test;
 
 [Collection("database")]
-public class UnitTest1
+public class Test
 {
     [Fact]
-    public async Task Test()
+    public async Task TestCollection()
     {
         Assert.True(Config.UnitTests);
         await using var context = new Context();
