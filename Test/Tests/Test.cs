@@ -29,7 +29,7 @@ public class Test
             Id = Guid.NewGuid(),
             Email = "test@test.com",
             GoogleExternalId = "id",
-            Name = "Marton",
+            Name = "Carton",
             TopLists = new List<UserToplists>()
             {
                 new UserToplists()
@@ -47,5 +47,6 @@ public class Test
         await context.SaveChangesAsync();
         var user = context.Set<User>().First();
         Assert.NotNull(user.TopLists);
+        Assert.NotNull(user.TopLists.First());
     }
 }

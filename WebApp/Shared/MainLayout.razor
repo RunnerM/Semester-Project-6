@@ -7,17 +7,17 @@
     <MudAppBar Elevation="1">
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@ToggleDrawer"/>
         <MudItem Style="padding-bottom:22px">
-            <MudAutocomplete T="string" SearchFunc="@SearchFunc" AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Default" OnKeyDown="OnEnter" Value="@_searchTerm"/>
+            <TopbarSearch/>
         </MudItem>
         <MudSpacer/>
-            <AuthorizeView>
-                <Authorized>
-                    <LoginControl/>
-                </Authorized>
-                <NotAuthorized>
-                   <LoginControl/>
-                </NotAuthorized>
-            </AuthorizeView>
+        <AuthorizeView>
+            <Authorized>
+                <LoginControl/>
+            </Authorized>
+            <NotAuthorized>
+                <LoginControl/>
+            </NotAuthorized>
+        </AuthorizeView>
     </MudAppBar>
     <MudDrawer @bind-Open="@_open" Elevation="1" Color="Color.Primary">
         <MudDrawerHeader>
@@ -36,6 +36,9 @@
     </MudMainContent>
 </MudLayout>
 
+<MudThemeProvider/>
+<MudDialogProvider/>
+<MudSnackbarProvider/>
 
 @code{
     private bool _open = false;
@@ -46,24 +49,7 @@
         _open = !_open;
     }
     
-    private async Task<IEnumerable<string>> SearchFunc(string value)
-    {
-        if (string.IsNullOrEmpty(value))
-            return Array.Empty<string>();
-        var movies = await DataService.SearchMovieByTermAsync(value);
-        return movies.Results.Select(x=>x.Title).ToArray();
-    }
-
-    private void OnEnter(KeyboardEventArgs obj)
-    {
-        if (obj.Key == "Enter")
-        {
-            NavigationManager.NavigateTo("/search/" + _searchTerm);
-        }
-    }
+    
 
 }
 
-<MudThemeProvider/>
-<MudDialogProvider/>
-<MudSnackbarProvider/>
