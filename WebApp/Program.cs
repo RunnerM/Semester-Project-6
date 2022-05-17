@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 
 using WebApp.Data.Services.TMDB;
+using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,15 +20,17 @@ builder.Services.AddServerSideBlazor();
 builder.Services.AddMudServices();
 AddServices(builder);
 //Services that were added for the same reason. ---------
-builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options => {
+    options.Cookie.SameSite = SameSiteMode.None;
+});
+
 builder.Services.AddAuthentication().AddGoogle(options =>
 {
     options.ClientId = builder.Configuration["Google:ClientId"];
     options.ClientSecret = builder.Configuration["Google:ClientSecret"];
-
+    
     //This is to get the profile picture and name.
     options.ClaimActions.MapJsonKey("urn:google:profile", "link");
-    options.ClaimActions.MapJsonKey("urn:google:image", "picture");
 });
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<HttpContextAccessor>();
