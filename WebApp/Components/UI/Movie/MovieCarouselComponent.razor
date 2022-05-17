@@ -1,11 +1,19 @@
 ﻿@inject NavigationManager NavigationManager
 
-<MudPaper   Elevation="3">
+           <div class="d-flex flex-column justify-center">
+       <MudText   >@Title</MudText>
+       </div>
+         <div class="d-flex flex-column justify-center" style="height:100%">  
+        
+        <MudImage Style="display:flex;"  Fluid=true ObjectFit="ObjectFit.Cover" Src="@PictureSrc"/>
+        
+         </div>
+   
+
+
     
-        <MudImage Style="display:flex;" Fluid=true ObjectFit="ObjectFit.Contain" Src="@PictureSrc"/>
-        <MudText>@Title</MudText>
-    
-</MudPaper>
+   
+   
 
 @code {
     [Parameter]

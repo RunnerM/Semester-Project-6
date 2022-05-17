@@ -16,16 +16,11 @@
 }
 else
 {
-
 <MudItem xs="12" md="12" lg="12"  Class="d-flex flex-column mud-width-full ">
-
-    <MudCarousel Class="mud-width-full" style="height:650px" ItemsSource="@currentMovies" @bind-SelectedIndex="currentIndex"  ShowArrows="true" ShowBullets="true" AutoCycle="false">
+    <MudCarousel Class="mud-width-full" style="height:40.625rem" ItemsSource="@currentMovies" @bind-SelectedIndex="currentIndex"  ShowArrows="true" ShowBullets="true" AutoCycle="false">
 	    <ItemTemplate>
-            <div class="d-flex flex-column flex-column justify-center" style="height:100%">
-            <MovieCarouselComponent  Title="@context.Title" PictureSrc="@context.BackdropPath" Id="@context.Id.ToString()"/>
-            </div>
+                <MovieCarouselComponent  Title="@context.Title" PictureSrc="@context.BackdropPath" Id="@context.Id.ToString()"/>
 	    </ItemTemplate>
-        
     </MudCarousel>
   
 </MudItem>
@@ -47,7 +42,21 @@ else
     protected override async Task OnInitializedAsync()
     {
         _movies = await DataService.GetTrendingMovies();
-        currentMovies = _movies.Take(4).ToList();
+        currentMovies = _movies.Take(10).ToList();
         currentIndex = 0;
+    }
+
+     [Parameter]
+    public string PictureSrc { get; set; }
+    
+    [Parameter]
+    public string Title { get; set; }
+    
+    [Parameter]
+    public string Id { get; set; }
+
+    private void OnClickMovie()
+    {
+        NavigationManager.NavigateTo("/Movie/" + Id);
     }
 }
