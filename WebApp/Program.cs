@@ -57,7 +57,7 @@ app.UseStaticFiles();
 app.UseRouting();
 
 //ALSO ADDED ---------
-app.UseCookiePolicy();
+//app.UseCookiePolicy();
 app.UseAuthentication();
 
 
