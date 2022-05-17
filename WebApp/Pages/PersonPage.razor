@@ -2,17 +2,26 @@
 @using WebApp.DataServices.Services.TMDB
 @using Data.TMDBDomain
 @inject IDataService DataService
-<PersonDetailsCard Id="_personId"></PersonDetailsCard>
+
+<PageTitle> @_title</PageTitle>
+
+<PersonDetailsCard Id="_personId"/>
+<PersonCreditsView Id="_personId"/>
 
 @code {
+
     [Parameter]
     public string Id { get; set; }
 
     private int _personId;
+    private string _title;
 
     protected override async Task OnInitializedAsync()
     {
         _personId = int.Parse(Id);
+        var p = await DataService.GetPersonByIdAsync(_personId);
+        _title = p.Name;
     }
+
 
 }

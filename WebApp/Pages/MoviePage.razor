@@ -1,19 +1,28 @@
 @page "/Movie/{id}"
+@using WebApp.DataServices.Services.TMDB
+@inject IDataService DataService
+
+<PageTitle>@_title</PageTitle>
+
+
 
 <MovieDetailCard movieId="@_movieId"></MovieDetailCard>
 <CastCard MovieId="@_movieId"></CastCard>
 
 
-
 @code {
+
     [Parameter]
     public string Id { get; set; }
-    
-    private int _movieId;
 
-    protected override void OnInitialized()
+    private int _movieId;
+    private string _title;
+
+    protected override async Task OnInitializedAsync()
     {
         _movieId = int.Parse(Id);
+        var m = await DataService.GetMovieByIdAsync(_movieId);
+        _title = m.Title;
     }
 
 }
