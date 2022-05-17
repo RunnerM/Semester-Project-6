@@ -1,26 +1,38 @@
 ﻿@inject NavigationManager NavigationManager
 
-           <div class="d-flex flex-column justify-center">
-       <MudText   >@Title</MudText>
-       </div>
-         <div class="d-flex flex-column justify-center" style="height:100%">  
-        
-        <MudImage Style="display:flex;"  Fluid=true ObjectFit="ObjectFit.Cover" Src="@PictureSrc"/>
-        
-         </div>
-   
 
-
-    
-   
-   
+      <div class="d-flex flex-column title" >
+          <MudPaper Elevation="25" Style="@($"color:{Colors.Grey.Darken4}; background:{Colors.Shades.Transparent};")">
+              <MudText Style="@($"color:{Colors.Purple.Lighten5};")" Typo="Typo.h3">@Title</MudText>
+          </MudPaper>
+      </div>   
+      <div class="d-flex flex-column bottom-left-element">
+        <MudPaper  Style="" Outlined="true" Square="true" Elevation="255">
+            <MudImage Style="display:flex;" Fluid=true Elevation="255" Width="150" ObjectFit="ObjectFit.Cover" Src="@CoverSrc" @onclick="OnClickMovie"/>
+        </MudPaper>
+     </div>
+     <div class="d-flex flex-column bottom-desc">
+       <MudPaper Elevation="25" Style="@($"color:{Colors.Grey.Darken4}; background:{Colors.Shades.Black};")">
+        <MudText Style="@($"color:{Colors.Purple.Lighten5};")" Typo="Typo.h6">@Overview</MudText>
+       </MudPaper>
+      </div>
+      <div class="d-flex flex-column justify-center" style="height:100%">  
+        <MudImage Style="display:flex;"  Fluid=true ObjectFit="ObjectFit.Cover" Src="@BackdropSrc" @onclick="OnClickMovie"/>
+      </div>
 
 @code {
+
     [Parameter]
-    public string PictureSrc { get; set; }
-    
+    public string BackdropSrc { get; set; }
+
+    [Parameter]
+    public string CoverSrc { get; set; }
+
     [Parameter]
     public string Title { get; set; }
+
+    [Parameter]
+    public string Overview { get; set; } 
     
     [Parameter]
     public string Id { get; set; }

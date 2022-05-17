@@ -84,5 +84,6 @@ public class TMDBClient : ITMDBClient
         var json = await result.Content.ReadAsStringAsync();
         var movies = JsonSerializer.Deserialize<TMDBPage<TMDBMovie>>(json);
         return movies.Results.ToList();
+
     }
 }
