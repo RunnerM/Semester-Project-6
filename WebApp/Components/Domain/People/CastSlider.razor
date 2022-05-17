@@ -19,7 +19,7 @@ else
         </MudStack>
         @foreach (var person in _activePeople)
         {
-            <PeopleCoverView Title="@person.Name" PictureSrc="@person.ProfilePath"/>
+            <PeopleCoverView Title="@person.Name" PictureSrc="@person.ProfilePath" Id="@person.Id.ToString()"/>
         }
         <MudStack>
             <MudSpacer/>

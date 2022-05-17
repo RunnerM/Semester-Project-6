@@ -3,6 +3,10 @@
 @using WebApp.DataServices.Services.TMDB
 @inject IDataService DataService
 
+@if (PopularPeople == null)
+{
+    return;
+}
 <PageTitle>People</PageTitle>
 
 <PersonSlider Category="Popular People" People="PopularPeople"/>
@@ -11,7 +15,7 @@
     private List<TMDBPerson> PopularPeople;
     protected override async Task OnInitializedAsync()
     {
-        PopularPeople =(List<TMDBPerson>) await DataService.GetPopularPersonalAsync();
+        PopularPeople = await DataService.GetPopularPersonalAsync();
     }
 
 }
