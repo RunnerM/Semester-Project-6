@@ -21,7 +21,7 @@ builder.Services.AddMudServices();
 AddServices(builder);
 //Services that were added for the same reason. ---------
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options => {
-    options.Cookie.SameSite = SameSiteMode.None;
+    options.Cookie.SameSite = SameSiteMode.Unspecified;
 });
 
 builder.Services.AddAuthentication().AddGoogle(options =>
