@@ -1,4 +1,4 @@
-@using WebApp.Data.Services.TMDB
+@using WebApp.DataServices.Services.TMDB
 @inject IDataService DataService
 @inject NavigationManager NavigationManager
 <MudAutocomplete
@@ -31,7 +31,8 @@
 
     private void OnSearchClick(MouseEventArgs obj)
     {
-        NavigationManager.NavigateTo("/search?term=" + SearchTerm);
+        NavigationManager.NavigateTo("/search/" + SearchTerm);
+        StateHasChanged();
     }
     
     private IEnumerable<string> Validate()

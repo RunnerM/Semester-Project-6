@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using Data.TMDBDomain;
 using Moq;
-using WebApp.Data.Services.TMDB;
+using WebApp.DataServices.Services.TMDB;
 using Xunit;
 
 namespace Test;

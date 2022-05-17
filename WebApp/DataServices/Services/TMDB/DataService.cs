@@ -1,7 +1,7 @@
 using Data.TMDBDomain;
 using EFCore.Utils;
 
-namespace WebApp.Data.Services.TMDB;
+namespace WebApp.DataServices.Services.TMDB;
 
 public class DataService : IDataService
 {
@@ -22,7 +22,7 @@ public class DataService : IDataService
         return movies;
     }
     
-    public async Task<List<TMDBPersonInList>> GetPopularPersonalAsync()
+    public async Task<List<TMDBPerson>> GetPopularPersonalAsync()
     {
         var people = await _tmdbClient.GetPopularPeopleAsync();
         foreach (var person in people)
@@ -68,7 +68,7 @@ public class DataService : IDataService
         return cast;
     }
 
-    public async Task<TMDBPage<TMDBMovie>> SearchMovieByTermAsync(string SearchTerm)
+    public async Task<List<TMDBMovie>> SearchMovieByTermAsync(string SearchTerm)
     {
         var movies = await _tmdbClient.SearchMovieByTermAsync(SearchTerm);
         movies.Results.ForEach(x =>
@@ -76,6 +76,19 @@ public class DataService : IDataService
             x.PosterPath = "https://image.tmdb.org/t/p/original/" + x.PosterPath;
             x.BackdropPath = "https://image.tmdb.org/t/p/original/" + x.BackdropPath;
         });
-        return movies;
+        return movies.Results;
+    }
+
+    public async Task<List<TMDBPerson>> SearchPeopleByTermAsync(string SearchTerm)
+    {
+        var people = await _tmdbClient.SearchPeopleByTermAsync(SearchTerm);
+        people.Results.ForEach(x =>
+        {
+            if (x.ProfilePath==null)
+                x.ProfilePath = "https://e7.pngegg.com/pngimages/923/367/png-clipart-man-white-and-black-with-eyeglasses-art-beard-art-face-logo-beard-face-people.png";
+            else
+                x.ProfilePath = "https://image.tmdb.org/t/p/original/" + x.ProfilePath;
+        });
+        return people.Results;
     }
 }

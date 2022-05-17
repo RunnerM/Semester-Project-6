@@ -8,8 +8,7 @@ using System.Net.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-
-using WebApp.Data.Services.TMDB;
+using WebApp.DataServices.Services.TMDB;
 
 var builder = WebApplication.CreateBuilder(args);
 

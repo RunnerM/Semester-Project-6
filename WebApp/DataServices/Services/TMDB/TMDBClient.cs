@@ -1,10 +1,7 @@
 using System.Text.Json;
-using Data.Domain;
 using Data.TMDBDomain;
-using EFCore.Utils;
-using Microsoft.EntityFrameworkCore;
 
-namespace WebApp.Data.Services.TMDB;
+namespace WebApp.DataServices.Services.TMDB;
 
 public class TMDBClient : ITMDBClient
 {
@@ -27,12 +24,12 @@ public class TMDBClient : ITMDBClient
         return movies.Results.ToList();
     }
 
-    public async Task<List<TMDBPersonInList>> GetPopularPeopleAsync()
+    public async Task<List<TMDBPerson>> GetPopularPeopleAsync()
     {
         var result = await _client.GetAsync(BaseUrl + "person/popular?" + ApiKey);
         result.EnsureSuccessStatusCode();
         var json = await result.Content.ReadAsStringAsync();
-        var movies = JsonSerializer.Deserialize<TMDBPage<TMDBPersonInList>>(json);
+        var movies = JsonSerializer.Deserialize<TMDBPage<TMDBPerson>>(json);
         return movies.Results.ToList();
     }
 
@@ -65,12 +62,19 @@ public class TMDBClient : ITMDBClient
 
     public async Task<TMDBPage<TMDBMovie>> SearchMovieByTermAsync(string SearchTerm)
     {
-        var s = BaseUrl + "search/movie?query=" + SearchTerm + ApiKey;
         var result = await _client.GetAsync(BaseUrl + "search/movie?query=" + SearchTerm +"&"+ ApiKey);
         result.EnsureSuccessStatusCode();
         var json = await result.Content.ReadAsStringAsync();
         var movies = JsonSerializer.Deserialize<TMDBPage<TMDBMovie>>(json);
         return movies;
     }
-    
+
+    public async Task<TMDBPage<TMDBPerson>> SearchPeopleByTermAsync(string SearchTerm)
+    {
+        var result = await _client.GetAsync(BaseUrl + "search/person?query=" + SearchTerm +"&"+ ApiKey);
+        result.EnsureSuccessStatusCode();
+        var json = await result.Content.ReadAsStringAsync();
+        var people = JsonSerializer.Deserialize<TMDBPage<TMDBPerson>>(json);
+        return people;;
+    }
 }

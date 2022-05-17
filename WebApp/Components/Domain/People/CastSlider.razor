@@ -1,5 +1,5 @@
 @using global::Data.TMDBDomain
-@using WebApp.Data.Services.TMDB
+@using WebApp.DataServices.Services.TMDB
 @inject IDataService DataService
 
 <MudText Color="Color.Default" Typo="Typo.h3">@Title</MudText>
@@ -7,32 +7,42 @@
 
 @if (People == null)
 {
-    <MudProgressLinear Color="Color.Primary" Indeterminate="true" />
+    <MudProgressLinear Color="Color.Primary" Indeterminate="true"/>
 }
 else
 {
     <div class="d-flex flex-row justify-space-around" style="padding: 10px">
-        <MudIconButton Icon="@Icons.Material.Filled.ArrowBack" aria-label="delete" OnClick="OnBackward"></MudIconButton>
+        <MudStack>
+            <MudSpacer/>
+            <MudIconButton Icon="@Icons.Material.Filled.ArrowBack" OnClick="OnBackward"></MudIconButton>
+            <MudSpacer/>
+        </MudStack>
         @foreach (var person in _activePeople)
         {
             <PeopleCoverView Title="@person.Name" PictureSrc="@person.ProfilePath"/>
         }
-        <MudIconButton Icon="@Icons.Material.Filled.ArrowForward" aria-label="delete" OnClick="OnForward"></MudIconButton>
+        <MudStack>
+            <MudSpacer/>
+            <MudIconButton Icon="@Icons.Material.Filled.ArrowForward" OnClick="OnForward"></MudIconButton>
+            <MudSpacer/>
+        </MudStack>
     </div>
 }
 
 
 @code {
+
     [Parameter]
     public int MovieId { get; set; }
+
     /// <summary> Type: 1-> cast,2->crew </summary>
     [Parameter]
     public int Type { get; set; }
-    
+
     private string Title { get; set; }
     private List<TMDBPerson>? People;
-    private List<TMDBPerson>? _activePeople;// The movies to display
-    private int _currentIndex;// The current index of the active movies
+    private List<TMDBPerson>? _activePeople; // The movies to display
+    private int _currentIndex; // The current index of the active movies
 
     protected override async Task OnInitializedAsync()
     {
@@ -40,7 +50,7 @@ else
         People = Type == 1 ? cast.cast : cast.crew;
         _activePeople = People.Take(6).ToList();
         _currentIndex = 0;
-        Title= Type == 1 ? "Cast" : "Crew";
+        Title = Type == 1 ? "Cast" : "Crew";
     }
 
     private void OnForward(MouseEventArgs obj)
