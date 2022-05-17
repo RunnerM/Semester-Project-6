@@ -28,6 +28,8 @@ builder.Services.Configure<CookiePolicyOptions>(options => {
     options.MinimumSameSitePolicy = SameSiteMode.None;
 });
 
+
+
 builder.Services.AddAuthentication().AddGoogle(options =>
 {
     options.ClientId = builder.Configuration["Google:ClientId"];

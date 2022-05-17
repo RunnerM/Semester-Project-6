@@ -28,6 +28,7 @@ namespace WebApp.Pages
             };
             return new ChallengeResult(provider, authenticationProperties);
         }
+        
         public async Task<IActionResult> OnGetCallbackAsync(
             string returnUrl = null, string remoteError = null)
         {
@@ -38,9 +39,20 @@ namespace WebApp.Pages
                 var authProperties = new AuthenticationProperties
                 {
                     IsPersistent = true,
-            
-                    RedirectUri = "https://" + Request.Host.Value.ToString() + "/"
+                    
+                    RedirectUri = "https://" + Request.Host.Value 
                 };
+
+
+                if(remoteError != null)
+                {
+                    authProperties.RedirectUri = "https://" + Request.Host.Value;
+                    HttpContext.Response.Redirect("https://" + Request.Host.Value);
+                }
+
+                //HttpContext.Response.Redirect("https://" + Request.Host.Value);
+
+
                 await HttpContext.SignInAsync(
                 CookieAuthenticationDefaults.AuthenticationScheme,
                 new ClaimsPrincipal(GoogleUser),
@@ -48,6 +60,10 @@ namespace WebApp.Pages
             }
             return LocalRedirect("/");
         }
+
+
     }
+
+
 }
 
