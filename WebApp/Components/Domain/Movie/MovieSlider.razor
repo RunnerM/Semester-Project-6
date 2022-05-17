@@ -1,50 +1,62 @@
 @using Data
 @using global::Data.TMDBDomain
-@using WebApp.Data.Services.TMDB
+@using WebApp.DataServices.Services.TMDB
 @inject IDataService DataService
 
 
-<MudText Color="Color.Default" Typo="Typo.h3">@Category</MudText>
+<MudText Color="Color.Default" Typo="Typo.h5">@Category</MudText>
 <MudDivider/>
 
-@if (_movies == null)
+@if (Movies == null)
 {
-    <MudProgressLinear Color="Color.Primary" Indeterminate="true" />
+    <MudProgressLinear Color="Color.Primary" Indeterminate="true"/>
 }
 else
 {
     <div class="d-flex flex-row justify-space-around">
-        <MudIconButton Icon="@Icons.Material.Filled.ArrowBack" aria-label="delete" OnClick="OnBackward"></MudIconButton>
+        <MudStack>
+            <MudSpacer/>
+            <MudIconButton Icon="@Icons.Material.Filled.ArrowBack" aria-label="delete" OnClick="OnBackward"></MudIconButton>
+            <MudSpacer/>
+        </MudStack>
         @foreach (var movie in activeMovies)
         {
             <MovieCoverView Title="@movie.Title" PictureSrc="@movie.PosterPath" Id="@movie.Id.ToString()"/>
         }
-        <MudIconButton Icon="@Icons.Material.Filled.ArrowForward" aria-label="delete" OnClick="OnForward"></MudIconButton>
+        <MudStack>
+            <MudSpacer/>
+            <MudIconButton Icon="@Icons.Material.Filled.ArrowForward" aria-label="delete" OnClick="OnForward"></MudIconButton>
+            <MudSpacer/>
+        </MudStack>
     </div>
 }
 
 
 @code {
+
     [Parameter]
     public string Category { get; set; }
 
-    private List<TMDBMovie> _movies;    
-    private List<TMDBMovie> activeMovies;// The movies to display
-    private int currentIndex;// The current index of the active movies
+    [Parameter]
+    public List<TMDBMovie>? Movies { get; set; }
+
+    private List<TMDBMovie> activeMovies; // The movies to display
+    private int currentIndex; // The current index of the active movies
 
     protected override async Task OnInitializedAsync()
     {
-        _movies = await DataService.GetTopRatedMovies();
-        activeMovies = _movies.Take(6).ToList();
+        if (Movies == null)
+            return;
+        activeMovies = Movies.Take(6).ToList();
         currentIndex = 0;
     }
 
     private void OnForward(MouseEventArgs obj)
     {
-        if (currentIndex == _movies.Count - 6)
+        if (currentIndex >= Movies.Count - 6)
             return;
-        activeMovies = _movies.Skip(currentIndex + 6).Take(6).ToList();
-        currentIndex += 6;
+        activeMovies = Movies.Skip(currentIndex + 1).Take(6).ToList();
+        currentIndex += 1;
         StateHasChanged();
     }
 
@@ -52,8 +64,8 @@ else
     {
         if (currentIndex == 0)
             return;
-        activeMovies = _movies.Skip(currentIndex - 6).Take(6).ToList();
-        currentIndex -= 6;
+        activeMovies = Movies.Skip(currentIndex - 1).Take(6).ToList();
+        currentIndex -= 1;
         StateHasChanged();
     }
 

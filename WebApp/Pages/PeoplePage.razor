@@ -1,8 +1,21 @@
 ﻿@page "/people"
+@using Data.TMDBDomain
+@using WebApp.DataServices.Services.TMDB
+@inject IDataService DataService
 
+@if (PopularPeople == null)
+{
+    return;
+}
 <PageTitle>People</PageTitle>
 
-<PersonSlider Category="Popular People"/>
+<PersonSlider Category="Popular People" People="PopularPeople"/>
 
 @code {
+    private List<TMDBPerson> PopularPeople;
+    protected override async Task OnInitializedAsync()
+    {
+        PopularPeople = await DataService.GetPopularPersonalAsync();
+    }
+
 }

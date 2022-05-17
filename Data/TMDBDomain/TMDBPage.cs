@@ -8,7 +8,7 @@ public class TMDBPage<TType>
     public int Page { get; set; }
     
     [JsonPropertyName("results")]
-    public TType[] Results { get; set; }
+    public List<TType> Results { get; set; }
     
     [JsonPropertyName("total_results")]
     public int TotalPages { get; set; }

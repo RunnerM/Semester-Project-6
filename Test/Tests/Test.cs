@@ -10,10 +10,10 @@ using Xunit;
 namespace Test;
 
 [Collection("database")]
-public class UnitTest1
+public class Test
 {
     [Fact]
-    public async Task Test()
+    public async Task TestCollection()
     {
         Assert.True(Config.UnitTests);
         await using var context = new Context();
@@ -29,7 +29,7 @@ public class UnitTest1
             Id = Guid.NewGuid(),
             Email = "test@test.com",
             GoogleExternalId = "id",
-            Name = "Marton",
+            Name = "Carton",
             TopLists = new List<UserToplists>()
             {
                 new UserToplists()
@@ -47,5 +47,6 @@ public class UnitTest1
         await context.SaveChangesAsync();
         var user = context.Set<User>().First();
         Assert.NotNull(user.TopLists);
+        Assert.NotNull(user.TopLists.First());
     }
 }

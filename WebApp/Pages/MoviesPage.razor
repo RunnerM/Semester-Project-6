@@ -1,11 +1,23 @@
 @page "/movies"
-
+@using global::Data.TMDBDomain
+@using WebApp.DataServices.Services.TMDB
+@inject IDataService DataService
 <PageTitle>Movies</PageTitle>
 
-
-<MovieSlider Category="Top Rated Movies"/>
+@if (_topRatedMovies==null)
+{
+    return;
+}
+<MovieSlider Category="Top Rated Movies" Movies="@_topRatedMovies"/>
 
 
 
 @code {
+    private List<TMDBMovie> _topRatedMovies{ get; set; }
+
+    protected override async Task OnInitializedAsync()    {
+        _topRatedMovies = await DataService.GetTopRatedMoviesAsync();
+    }
+    
+
 }
