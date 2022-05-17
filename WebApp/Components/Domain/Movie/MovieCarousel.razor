@@ -1,8 +1,10 @@
 ﻿@using Data
 @using global::Data.TMDBDomain
 @using WebApp.Data.Services.TMDB
+@using WebApp.Components.Domain.Movie
 @inject IDataService DataService
 @inject NavigationManager NavigationManager
+
 
 <MudGrid>
     
@@ -16,15 +18,16 @@ else
 {
 
 <MudItem xs="12" md="12" lg="12"  Class="d-flex flex-column mud-width-full ">
-    <div class=full-height>
-    <MudCarousel  ItemsSource="@currentMovies" @bind-SelectedIndex="currentIndex"  ShowArrows="true" ShowBullets="true" AutoCycle="false">
-        
+
+    <MudCarousel Class="mud-width-full" style="height:650px" ItemsSource="@currentMovies" @bind-SelectedIndex="currentIndex"  ShowArrows="true" ShowBullets="true" AutoCycle="false">
 	    <ItemTemplate>
-            <MovieCarouselComponent Title="@context.Title" PictureSrc="@context.BackdropPath" Id="@context.Id.ToString()"/>
+            <div class="d-flex flex-column flex-column justify-center" style="height:100%">
+            <MovieCarouselComponent  Title="@context.Title" PictureSrc="@context.BackdropPath" Id="@context.Id.ToString()"/>
+            </div>
 	    </ItemTemplate>
         
     </MudCarousel>
-    </div>
+  
 </MudItem>
 
 }

@@ -38,7 +38,8 @@ namespace WebApp.Pages
                 var authProperties = new AuthenticationProperties
                 {
                     IsPersistent = true,
-                    RedirectUri = this.Request.Host.Value
+            
+                    RedirectUri = "https://" + Request.Host.Value.ToString() + "/"
                 };
                 await HttpContext.SignInAsync(
                 CookieAuthenticationDefaults.AuthenticationScheme,
