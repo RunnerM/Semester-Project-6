@@ -8,8 +8,7 @@ using System.Net.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-
-using WebApp.Data.Services.TMDB;
+using WebApp.DataServices.Services.TMDB;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,22 +17,35 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddMudServices();
 AddServices(builder);
-//Services that were added for the same reason. ---------
-builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
-builder.Services.AddAuthentication().AddGoogle(options =>
-{
-    options.ClientId = builder.Configuration["Google:ClientId"];
-    options.ClientSecret = builder.Configuration["Google:ClientSecret"];
 
-    //This is to get the profile picture and name.
-    options.ClaimActions.MapJsonKey("urn:google:profile", "link");
-    options.ClaimActions.MapJsonKey("urn:google:image", "picture");
-});
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<HttpContextAccessor>();
 builder.Services.AddHttpClient();
 builder.Services.AddScoped<HttpClient>();
 builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
+
+
+//Services that were added for the same reason. ---------
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options => {
+    options.Cookie.SameSite = SameSiteMode.Lax;
+});
+
+builder.Services.Configure<CookiePolicyOptions>(options => {
+    options.MinimumSameSitePolicy = SameSiteMode.Lax;
+});
+
+
+
+builder.Services.AddAuthentication().AddGoogle(options =>
+{
+    options.ClientId = builder.Configuration["Google:ClientId"];
+    options.ClientSecret = builder.Configuration["Google:ClientSecret"];
+    
+    
+    //This is to get the profile picture and name.
+    options.ClaimActions.MapJsonKey("urn:google:profile", "link");
+});
+
 
 
 

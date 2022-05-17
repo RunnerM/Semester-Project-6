@@ -8,6 +8,10 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <Content Remove="Components\Domain\Movie\MovieCarousel.razor.razor" />
+    </ItemGroup>
+
+    <ItemGroup>
       <ProjectReference Include="..\EFCore\EFCore.csproj" />
     </ItemGroup>
 

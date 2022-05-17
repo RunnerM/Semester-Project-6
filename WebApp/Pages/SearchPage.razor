@@ -1,0 +1,40 @@
+@page "/search/{SearchTerm}"
+@using WebApp.DataServices.Services.TMDB
+@using Data.TMDBDomain
+@inject IDataService DataService
+
+
+<MudText Typo="Typo.h4">Results:</MudText>
+
+@if(MovieResults==null&& PersonResults == null){
+    return;
+}else if (MovieResults.Count==0 && PersonResults.Count>0)
+{
+    <PersonSlider Category="Person" People="PersonResults"></PersonSlider>
+}else if (PersonResults.Count==0 && MovieResults.Count>0)
+{
+    <MovieSlider Category="Movies" Movies="@MovieResults"/>
+}else
+{
+   <MovieSlider Category="Movies" Movies="@MovieResults"/>
+   <PersonSlider Category="Person" People="PersonResults"></PersonSlider> 
+}
+
+
+
+@code {
+    [Parameter]
+    public string SearchTerm { get; set; }
+    
+    private List<TMDBMovie> MovieResults { get; set; }
+    private List<TMDBPerson> PersonResults { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        MovieResults = await DataService.SearchMovieByTermAsync(SearchTerm);
+        PersonResults = await DataService.SearchPeopleByTermAsync(SearchTerm);
+        StateHasChanged();
+    }
+    
+
+}

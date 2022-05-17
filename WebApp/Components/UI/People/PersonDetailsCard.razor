@@ -1,0 +1,38 @@
+@using Data.TMDBDomain
+@using WebApp.DataServices.Services.TMDB
+@inject IDataService DataService 
+@if (_person == null)
+{
+    return;
+}
+
+<MudPaper Elevation="3" Class="rounded-lg ma-4">
+
+    <MudStack Row="true" Style="padding: 20px">
+        <MudStack AlignItems="AlignItems.Center">
+            <MudImage Src="@_person.ProfilePath" Height="300" Width="300" ObjectFit="ObjectFit.Cover" Style="border-radius: 150px; padding: 10px;"/>
+            <MudText Typo="Typo.h4">@_person.Name</MudText>
+        </MudStack>
+        <MudStack Justify="Justify.SpaceEvenly">
+            <MudText Typo="Typo.h5">Biogarphy: @_person.Biography</MudText>
+            <MudText Typo="Typo.h5">Popularity: @_person.Popularity</MudText>
+            <MudText Typo="Typo.h5">Known: @_person.KnownForDepartment</MudText>
+        </MudStack>
+        
+    </MudStack>
+</MudPaper>
+
+@code {
+
+    [Parameter]
+    public int Id { get; set; }
+
+    private TMDBPerson? _person;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _person = await DataService.GetPersonByIdAsync(Id);
+    }
+
+
+}
