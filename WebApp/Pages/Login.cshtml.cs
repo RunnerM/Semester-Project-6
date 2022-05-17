@@ -44,13 +44,10 @@ namespace WebApp.Pages
                 };
 
 
-                if(remoteError != null)
-                {
-                    authProperties.RedirectUri = "https://" + Request.Host.Value;
-                    HttpContext.Response.Redirect("https://" + Request.Host.Value);
-                }
+                
 
-                //HttpContext.Response.Redirect("https://" + Request.Host.Value);
+               HttpContext.Response.Redirect("https://" + Request.Host.Value);
+             
 
                 try {
                     
@@ -58,7 +55,7 @@ namespace WebApp.Pages
                     
                     new ClaimsPrincipal(GoogleUser),
                     authProperties);
-                } catch(System.Exception e) {
+                } catch(AggregateException e) {
                     e.InnerException.ToString();
                     e.Source.ToString();
             
