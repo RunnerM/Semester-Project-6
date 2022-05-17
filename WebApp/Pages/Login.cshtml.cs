@@ -52,11 +52,18 @@ namespace WebApp.Pages
 
                 //HttpContext.Response.Redirect("https://" + Request.Host.Value);
 
-
-                await HttpContext.SignInAsync(
-                CookieAuthenticationDefaults.AuthenticationScheme,
-                new ClaimsPrincipal(GoogleUser),
-                authProperties);
+                try {
+                    
+                    await HttpContext.SignInAsync(
+                    
+                    new ClaimsPrincipal(GoogleUser),
+                    authProperties);
+                } catch(System.Exception e) {
+                    e.InnerException.ToString();
+                    e.Source.ToString();
+            
+                }
+                
             }
             return LocalRedirect("/");
         }
