@@ -1,17 +1,46 @@
 @using global::Data.TMDBDomain
-<MudPaper Elevation="3" Outlined="true">
-    <MudText Typo="Typo.h5" Color="Color.Default">Title</MudText>
-    <MudText Typo="Typo.body1" Color="Color.Default">Year:</MudText>
-</MudPaper>
+@using WebApp.DataServices.Services.TMDB
+@inject IDataService DataService 
+
+@if (_movie == null)
+{
+    <MudSkeleton Height="300px" Width="500px"/>
+}
+else
+{
+    <MudText Typo="Typo.h3" Color="Color.Default" Style="padding-bottom: 10px">@_movie.Title</MudText>
+    <MudDivider  Vertical="true" Light="true"/>
+    <MudPaper Elevation="3">
+        <MudStack Row="false">
+            <MudImage Src="@_movie.BackdropPath" ObjectFit="ObjectFit.Cover" Height="400" Style="border-radius: 5px"></MudImage>
+            <MudStack Row="true">
+                <MudText Typo="Typo.h4" Color="Color.Default" Style="padding-left: 10px">Release Date:</MudText>
+                <MudText Typo="Typo.h4" Color="Color.Default" Style="padding-right:8px">@_movie.ReleaseDate</MudText>
+                <MudSpacer/>
+                <MudText Typo="Typo.h4" Color="Color.Default" Style="padding-left: 10px">Rating:</MudText>
+                <MudText Typo="Typo.h4" Color="Color.Default" Style="padding-right:8px">@_movie.VoteAverage</MudText>
+                <MudText Typo="Typo.h4" Color="Color.Default" Style="padding-left: 10px">Votes:</MudText>
+                <MudText Typo="Typo.h4" Color="Color.Default" Style="padding-right:8px">@_movie.VoteCount</MudText>
+            </MudStack>
+            <MudStack Row="true">
+                <MudText Typo="Typo.h4" Color="Color.Default" Style="padding-left: 10px">Overview:</MudText>
+                <MudText Typo="Typo.h6" Color="Color.Default" Style="padding-top:8px">@_movie.Overview</MudText>
+            </MudStack>
+        </MudStack>
+    </MudPaper>
+}
+
+
 
 @code {
     private TMDBMovie _movie;
-    
+
     [Parameter]
     public int movieId { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        
+        _movie = await DataService.GetMovieByIdAsync(movieId);
     }
+
 }

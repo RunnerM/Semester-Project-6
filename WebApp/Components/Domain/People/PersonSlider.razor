@@ -1,48 +1,62 @@
-@using WebApp.Data.Services.TMDB
 @using global::Data.TMDBDomain
+@using WebApp.DataServices.Services.TMDB
 @inject IDataService DataService
 
 
-<MudText Color="Color.Default" Typo="Typo.h3">@Category</MudText>
+<MudText Color="Color.Default" Typo="Typo.h5">@Category</MudText>
 <MudDivider/>
 
-@if (_people == null)
+@if (People == null)
 {
-    <MudProgressLinear Color="Color.Primary" Indeterminate="true" />
+    <MudProgressLinear Color="Color.Primary" Indeterminate="true"/>
 }
 else
 {
     <div class="d-flex flex-row justify-space-around">
-        <MudIconButton Icon="@Icons.Material.Filled.ArrowBack" aria-label="delete" OnClick="OnBackward"></MudIconButton>
+        <MudStack>
+            <MudSpacer/>
+            <MudIconButton Icon="@Icons.Material.Filled.ArrowBack"  OnClick="OnBackward"></MudIconButton>
+            <MudSpacer/>
+        </MudStack>
         @foreach (var person in activePeople)
         {
-            <PeopleCoverView Title="@person.Name" PictureSrc="@person.ProfilePath"/>
+            <PeopleCoverView Title="@person.Name" PictureSrc="@person.ProfilePath" Id="@person.Id.ToString()"/>
         }
-        <MudIconButton Icon="@Icons.Material.Filled.ArrowForward" aria-label="delete" OnClick="OnForward"></MudIconButton>
+        <MudStack>
+            <MudSpacer/>
+            <MudIconButton Icon="@Icons.Material.Filled.ArrowForward"  OnClick="OnForward"></MudIconButton>
+            <MudSpacer/>
+        </MudStack>
     </div>
 }
 
 
 @code {
+
     [Parameter]
     public string Category { get; set; }
 
-    private List<TMDBPersonInList> _people;    
-    private List<TMDBPersonInList> activePeople;// The movies to display
-    private int currentIndex;// The current index of the active movies
+    [Parameter]
+    public List<TMDBPerson>? People { get; set; }
 
-    protected override async Task OnInitializedAsync()
+    private List<TMDBPerson> activePeople; // The movies to display
+    private int currentIndex; // The current index of the active movies
+
+    protected override async Task OnParametersSetAsync()
     {
-        _people = await DataService.GetPopularPersonal();
-        activePeople = _people.Take(6).ToList();
+        if (People == null)
+        {
+            return;
+        }
+        activePeople = People.Take(6).ToList();
         currentIndex = 0;
     }
 
     private void OnForward(MouseEventArgs obj)
     {
-        if (currentIndex == _people.Count - 6)
+        if (currentIndex >= People.Count - 6)
             return;
-        activePeople = _people.Skip(currentIndex + 6).Take(6).ToList();
+        activePeople = People.Skip(currentIndex + 6).Take(6).ToList();
         currentIndex += 6;
         StateHasChanged();
     }
@@ -51,7 +65,7 @@ else
     {
         if (currentIndex == 0)
             return;
-        activePeople = _people.Skip(currentIndex - 6).Take(6).ToList();
+        activePeople = People.Skip(currentIndex - 6).Take(6).ToList();
         currentIndex -= 6;
         StateHasChanged();
     }
