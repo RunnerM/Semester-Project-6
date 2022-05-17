@@ -105,4 +105,14 @@ public class DataService : IDataService
         });
         return people.Results;
     }
+    public async Task<List<TMDBMovie>> GetTrendingMovies()
+    {
+        var movies = await _tmdbClient.GetTrendingWeeklyMovies();
+        foreach (var movie in movies)
+        {
+            movie.PosterPath = "https://image.tmdb.org/t/p/original/" + movie.PosterPath;
+            movie.BackdropPath = "https://image.tmdb.org/t/p/original/" + movie.BackdropPath;
+        }
+        return movies;
+    }
 }

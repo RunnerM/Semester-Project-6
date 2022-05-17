@@ -15,4 +15,5 @@ public interface IDataService
     public Task<List<TMDBMovie>> SearchMovieByTermAsync(string SearchTerm);
     public Task<List<TMDBPerson>> SearchPeopleByTermAsync(string SearchTerm);
 
+    public Task<List<TMDBMovie>> GetTrendingMovies();
 }

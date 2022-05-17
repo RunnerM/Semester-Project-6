@@ -13,4 +13,5 @@ public interface ITMDBClient
     
     public Task<TMDBPage<TMDBMovie>> SearchMovieByTermAsync(string SearchTerm);
     public Task<TMDBPage<TMDBPerson>> SearchPeopleByTermAsync(string SearchTerm);
+    public Task<List<TMDBMovie>> GetTrendingWeeklyMovies();
 }
