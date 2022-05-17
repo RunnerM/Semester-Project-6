@@ -5,24 +5,22 @@
 @if (User.Identity.Name != null)
 {
     <MudMenu FullWidth="true">
-                                <ActivatorContent>
-                                    <MudChip Icon="@Icons.Material.Filled.Person" Color="Color.Primary"> @GivenName </MudChip>
-                                </ActivatorContent>
-                                <ChildContent>
-                                    <MudMenuItem>Settings</MudMenuItem>
-                                    <MudMenuItem Href="/Logout" Target="_top">Log out</MudMenuItem>
-                                </ChildContent>
-                            </MudMenu>
+       <ActivatorContent>
+          <MudChip Icon="@Icons.Material.Filled.Person" Color="Color.Primary"> @GivenName </MudChip>
+        </ActivatorContent>
+            <ChildContent>
+                <MudMenuItem>Settings</MudMenuItem>
+                <MudMenuItem Href="/Logout" Target="_top">Log out</MudMenuItem>
+            </ChildContent>
+     </MudMenu>
 }
 else
 {
     <MudButton Href="/Login" Target="_top" Variant="Variant.Filled" StartIcon="@Icons.Custom.Brands.Google" Color="Color.Error" Size="Size.Large">Sign in</MudButton>
 }
 @code {
-    private ClaimsPrincipal User;
-    private string GivenName;
-    private string Surname;
-    private string Avatar;
+    private ClaimsPrincipal? User;
+    private string? GivenName;
     protected override void OnInitialized()
     {
         base.OnInitialized();
@@ -42,30 +40,6 @@ else
             {
                 GivenName = User.Identity.Name;
             }
-            //// Try to get the Surname
-            //var surname =
-            //    _httpContextAccessor.HttpContext.User
-            //    .FindFirst(ClaimTypes.Surname);
-            //if (surname != null)
-            //{
-            //    Surname = surname.Value;
-            //}
-            //else
-            //{
-            //    Surname = "";
-            //}
-            //// Try to get Avatar
-            //var avatar =
-            //_httpContextAccessor.HttpContext.User
-            //.FindFirst("urn:google:image");
-            //if (avatar != null)
-            //{
-            //    Avatar = avatar.Value;
-            //}
-            //else
-            //{
-            //    Avatar = "";
-            //}
         }
         catch { }
     }

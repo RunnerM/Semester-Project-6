@@ -1,6 +1,47 @@
+@using System.Security.Claims
+@inject IHttpContextAccessor _httpContextAccessor
+
 @page "/"
 @attribute [Authorize]
 
 <PageTitle>Home</PageTitle>
 
-<h1>Welcome Random User</h1>
+<AuthorizeView>
+	<Authorized>
+		<h1>Welcome @GivenName!</h1>
+	</Authorized>
+
+	<NotAuthorized>
+        <h1>Welcome Guest!</h1>
+	</NotAuthorized>
+</AuthorizeView>
+
+<MovieCarousel/>
+
+@code {
+    private ClaimsPrincipal? User;
+    private string? GivenName;
+
+	protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        try
+        {
+            // Set the user to determine if they are logged in
+            User = _httpContextAccessor.HttpContext.User;
+            // Try to get the GivenName
+            var givenName =
+                _httpContextAccessor.HttpContext.User
+                .FindFirst(ClaimTypes.GivenName);
+            if (givenName != null)
+            {
+                GivenName = givenName.Value;
+            }
+            else
+            {
+                GivenName = User.Identity.Name;
+            }
+        }
+        catch { }
+    }
+}
