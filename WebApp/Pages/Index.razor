@@ -1,5 +1,9 @@
 @using System.Security.Claims
+@using global::Data.TMDBDomain
+@using WebApp.DataServices.Services.TMDB
+@inject IDataService DataService
 @inject IHttpContextAccessor _httpContextAccessor
+@inject ISnackbar Snackbar
 
 @page "/"
 @attribute [Authorize]
@@ -8,21 +12,43 @@
 
 <AuthorizeView>
 	<Authorized>
-		<h1>Welcome @GivenName!</h1>
+
+        
 	</Authorized>
 
 	<NotAuthorized>
-        <h1>Welcome Guest!</h1>
+
+        
 	</NotAuthorized>
 </AuthorizeView>
-
+<MudDivider Style="margin-bottom:2px;" DividerType="DividerType.FullWidth" > </MudDivider>
+<MudText Style="font-size:30px;" Typo="Typo.button">New and popular movies this week</MudText>
+<MudDivider Style="margin-top:2px;" DividerType="DividerType.FullWidth" > </MudDivider>
 <MovieCarousel/>
+<MudDivider Style="margin-bottom:5px;" DividerType="DividerType.FullWidth" > </MudDivider>
+@if (_topRatedMovies==null)
+{
+    return;
+}
+<MudDivider Style="padding-bottom:5px;" DividerType="DividerType.FullWidth" > </MudDivider>
+<MovieSlider Category="Top Rated Movies" Movies="@_topRatedMovies"/>
+<MudDivider Style="margin-bottom:5px;" DividerType="DividerType.FullWidth" > </MudDivider>
+@if (PopularPeople == null)
+{
+    return;
+}
+<MudDivider Style="padding-bottom:5px;" DividerType="DividerType.FullWidth" > </MudDivider>
+<PersonSlider Category="Popular People" People="PopularPeople"/>
+
+
 
 @code {
     private ClaimsPrincipal? User;
     private string? GivenName;
+    private List<TMDBMovie> _topRatedMovies{ get; set; }
+    private List<TMDBPerson> PopularPeople;
 
-	protected override void OnInitialized()
+    protected override void OnInitialized()
     {
         base.OnInitialized();
         try
@@ -41,7 +67,24 @@
             {
                 GivenName = User.Identity.Name;
             }
+
         }
         catch { }
+
+        if(GivenName == null)
+        {
+            Snackbar.Add("Welcome Guest. Care to join?", Severity.Info, config => { config.HideIcon = true; });
+        }
+        else
+        {
+            Snackbar.Add("Welcome back." + GivenName, Severity.Success, config => { config.HideIcon = true; });
+        }
     }
+
+    protected override async Task OnInitializedAsync()    {
+        _topRatedMovies = await DataService.GetTopRatedMoviesAsync();
+        PopularPeople = await DataService.GetPopularPersonalAsync();
+    }
+
+    
 }

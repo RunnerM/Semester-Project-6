@@ -44,14 +44,7 @@ else
         </NextButtonTemplate>    
     </MudCarousel>
 </MudItem>
-
 }
-
-
-
-
-<h3>MovieCarousel</h3>
-
 </MudGrid>
 @code {
 
@@ -59,19 +52,16 @@ else
     private List<TMDBMovie> currentMovies;// The movies to display
     private int currentIndex;// The current index of the active movies
 
-    private string counter;
-
     protected override async Task OnInitializedAsync()
     {
         _movies = await DataService.GetTrendingMovies();
         for (int i = 0; i < _movies.ToList().Count(); i++)
         {
-            counter = _movies.ToList().ElementAt(i).Title.ToString();
+            
             if(_movies.ElementAt(i).Title.Count() > 40)
             {
                 _movies.RemoveAt(i);
             } else if(_movies.ElementAt(i).Overview.Count() > 299)
-            //Fix the fantastic beast shit.. 
             {
                 _movies.RemoveAt(i);
             }
