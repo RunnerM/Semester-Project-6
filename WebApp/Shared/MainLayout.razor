@@ -26,16 +26,18 @@
             @Body
         </MudContainer>
     </MudMainContent>
-    <footer></footer>
+    <MudSwitch @bind-Checked="@_isDarkMode" Color="Color.Primary" Class="ma-4" T="bool" Label="Toggle Light/Dark Mode"/>
 </MudLayout>
 
-<MudThemeProvider/>
+<MudThemeProvider @bind-IsDarkMode="@_isDarkMode" Theme="_theme"/>
 <MudDialogProvider/>
 <MudSnackbarProvider/>
 
 @code{
     private bool _open = false;
     private string _searchTerm = "";
+    public MudTheme _theme = new();
+    public bool _isDarkMode;
 
     void ToggleDrawer()
     {

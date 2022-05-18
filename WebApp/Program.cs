@@ -45,6 +45,7 @@ builder.Services.AddAuthentication().AddGoogle(options =>
     
     //This is to get the profile picture and name.
     options.ClaimActions.MapJsonKey("urn:google:profile", "link");
+    options.ClaimActions.MapJsonKey("urn:google:image", "picture");
 });
 
 if (builder.Environment.EnvironmentName=="Development")

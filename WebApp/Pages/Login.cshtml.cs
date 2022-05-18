@@ -42,13 +42,7 @@ namespace WebApp.Pages
                     
                     RedirectUri = "https://" + Request.Host.Value 
                 };
-
-
-                
-
                HttpContext.Response.Redirect("https://" + Request.Host.Value);
-             
-
                 try {
                     
                     await HttpContext.SignInAsync(

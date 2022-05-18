@@ -2,6 +2,8 @@
 @using Microsoft.AspNetCore.Http
 @inject IHttpContextAccessor _httpContextAccessor
 @inject HttpClient Http
+@inject NavigationManager NavigationManager
+
 @if (User.Identity.Name != null)
 {
     <MudMenu FullWidth="true">
@@ -9,7 +11,7 @@
           <MudChip Icon="@Icons.Material.Filled.Person" Color="Color.Primary"> @GivenName </MudChip>
         </ActivatorContent>
             <ChildContent>
-                <MudMenuItem>Settings</MudMenuItem>
+                <MudMenuItem @onclick="@OnClickProfile" Target="_top">Settings</MudMenuItem>
                 <MudMenuItem Href="/Logout" Target="_top">Log out</MudMenuItem>
             </ChildContent>
      </MudMenu>
@@ -20,13 +22,17 @@ else
 }
 @code {
     private ClaimsPrincipal? User;
-    private string? GivenName;
+    public string? GivenName { get; set; }
+    public string? Surname { get; set; }
+    public string? Avatar { get; set; }
+    public string?  routeId { get; set; }
     protected override void OnInitialized()
     {
         base.OnInitialized();
         try
         {
-            // Set the user to determine if they are logged in
+            //ToDo If context doesn't get user createIdentity and add it. 
+            //Try to get identity 
             User = _httpContextAccessor.HttpContext.User;
             // Try to get the GivenName
             var givenName =
@@ -40,7 +46,29 @@ else
             {
                 GivenName = User.Identity.Name;
             }
+            //Try to get UniqueIdentifier
+            var temp_routeId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier); 
+            if (temp_routeId != null)
+            {
+                routeId = temp_routeId.Value.ToString();
+            }
+            else
+            {
+                routeId = User.Identity.Name;
+                //Case where can't fetch the nameIdentifier. get it from the creted identity. 
+            }
+
+
+
         }
         catch { }
+    }
+
+  
+    
+
+    private void OnClickProfile()
+    {
+        NavigationManager.NavigateTo("/profile/" + routeId );
     }
 }
