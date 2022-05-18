@@ -86,4 +86,15 @@ public class TMDBClient : ITMDBClient
         return movies.Results.ToList();
 
     }
+
+    public async Task<List<TMDBMovie>> GetCreditsForPersonAsync(int personId)
+    {
+        var result = await _client.GetAsync(BaseUrl + "person/"+personId+"/movie_credits?" + ApiKey);
+        result.EnsureSuccessStatusCode();
+        var json = await result.Content.ReadAsStringAsync();
+        var movies = JsonSerializer.Deserialize<TMDBCredit>(json);
+        var all = movies.cast;
+        all.AddRange(movies.crew);
+        return all;
+    }
 }

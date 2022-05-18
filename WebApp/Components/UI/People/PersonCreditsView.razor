@@ -1,0 +1,23 @@
+@using Data.TMDBDomain
+@using WebApp.DataServices.Services.TMDB
+@inject IDataService DataService
+
+@if (Movies == null)
+{
+    return;
+}
+
+<MovieSlider Category="Credits" Movies="@Movies"></MovieSlider>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    public List<TMDBMovie>? Movies { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Movies = await DataService.GetCreditsForPersonAsync(Id);
+    }
+
+}

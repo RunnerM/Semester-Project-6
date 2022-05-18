@@ -5,6 +5,7 @@ using MudBlazor.Services;
 using EFCore;
 //Login
 using System.Net.Http;
+using EFCore.Config;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -46,8 +47,10 @@ builder.Services.AddAuthentication().AddGoogle(options =>
     options.ClaimActions.MapJsonKey("urn:google:profile", "link");
 });
 
-
-
+if (builder.Environment.EnvironmentName=="Development")
+    Config.Init(ConfigVariables.Variables("Default"));
+if (builder.Environment.EnvironmentName=="Production")
+    Config.Init(ConfigVariables.Variables("Default"));
 
 var app = builder.Build();
 

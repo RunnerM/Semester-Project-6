@@ -105,6 +105,7 @@ public class DataService : IDataService
         });
         return people.Results;
     }
+
     public async Task<List<TMDBMovie>> GetTrendingMovies()
     {
         var movies = await _tmdbClient.GetTrendingWeeklyMovies();
@@ -113,6 +114,19 @@ public class DataService : IDataService
             movie.PosterPath = "https://image.tmdb.org/t/p/original/" + movie.PosterPath;
             movie.BackdropPath = "https://image.tmdb.org/t/p/original/" + movie.BackdropPath;
         }
+
         return movies;
+    }
+
+    public async Task<List<TMDBMovie>> GetCreditsForPersonAsync(int personId)
+    {
+        var m = await _tmdbClient.GetCreditsForPersonAsync(personId);
+        m.ForEach(x =>
+            {
+                x.PosterPath = ImageBaseUrl + x.PosterPath;
+                x.BackdropPath = ImageBaseUrl + x.BackdropPath;
+            }
+        );
+        return m;
     }
 }
