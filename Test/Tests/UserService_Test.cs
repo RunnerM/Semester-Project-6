@@ -38,7 +38,7 @@ public class UserService_Test
     public async Task GetUser_Test()
     {
         seed();
-        var user = await _userService.GetUserByEmailAsync("test@test.com");
+        var user = await _userService.GetUserByEmailAsync("test");
         Assert.NotNull(user);
         Assert.Equal("Test", user.Name);
         var user2 = await _userService.GetUserByIdAsync(user.Id);
