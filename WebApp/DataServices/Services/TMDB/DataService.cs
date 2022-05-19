@@ -129,4 +129,27 @@ public class DataService : IDataService
         );
         return m;
     }
+
+
+    public async Task<List<TMDBMovie>> GetNowPlayingMovies() 
+    {
+        var movies = await _tmdbClient.GetNowPlayingMoviesAsync();
+        foreach (var movie in movies)
+            movie.PosterPath = ImageBaseUrl + movie.PosterPath;
+        return movies;
+    }
+    public async Task<List<TMDBMovie>> GetPopularMovies()
+    {
+        var movies = await _tmdbClient.GetPopularMoviesAsync();
+        foreach (var movie in movies)
+            movie.PosterPath = ImageBaseUrl + movie.PosterPath;
+        return movies;
+    } 
+    public async Task<List<TMDBMovie>> GetUpcomingMovies()
+    {
+    var movies = await _tmdbClient.GetUpcomingMoviesAsync();
+    foreach (var movie in movies)
+        movie.PosterPath = ImageBaseUrl + movie.PosterPath;
+    return movies;
+    } 
 }

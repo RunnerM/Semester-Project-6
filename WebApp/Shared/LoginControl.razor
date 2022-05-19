@@ -3,6 +3,7 @@
 @inject IHttpContextAccessor _httpContextAccessor
 @inject HttpClient Http
 @inject NavigationManager NavigationManager
+@inject ISnackbar Snackbar
 
 @if (User.Identity.Name != null)
 {
@@ -62,6 +63,17 @@ else
 
         }
         catch { }
+
+        Snackbar.Configuration.PositionClass = Defaults.Classes.Position.BottomRight;
+        if(GivenName == null)
+        {
+            
+            Snackbar.Add("Welcome Guest.  Care to join?", Severity.Info, config => { config.HideIcon = true; });
+        }
+        else
+        {
+            Snackbar.Add("Welcome back " + GivenName, Severity.Success, config => { config.HideIcon = true; });
+        }
     }
 
   

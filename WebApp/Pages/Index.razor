@@ -3,7 +3,7 @@
 @using WebApp.DataServices.Services.TMDB
 @inject IDataService DataService
 @inject IHttpContextAccessor _httpContextAccessor
-@inject ISnackbar Snackbar
+
 
 @page "/"
 @attribute [Authorize]
@@ -22,23 +22,52 @@
 	</NotAuthorized>
 </AuthorizeView>
 <MudDivider Style="margin-bottom:2px;" DividerType="DividerType.FullWidth" > </MudDivider>
-<MudText Style="font-size:30px;" Typo="Typo.button">New and popular movies this week</MudText>
-<MudDivider Style="margin-top:2px;" DividerType="DividerType.FullWidth" > </MudDivider>
+<MudDivider Style="margin-bottom:2px;height:10px" DividerType="DividerType.FullWidth" > </MudDivider>
 <MovieCarousel/>
-<MudDivider Style="margin-bottom:5px;" DividerType="DividerType.FullWidth" > </MudDivider>
+<MudDivider Style="margin-top:2px;height:10px" DividerType="DividerType.FullWidth" > </MudDivider>
+
 @if (_topRatedMovies==null)
 {
     return;
 }
-<MudDivider Style="padding-bottom:5px;" DividerType="DividerType.FullWidth" > </MudDivider>
+<MudDivider Style="margin-top:10px;" DividerType="DividerType.FullWidth" > </MudDivider>
 <MovieSlider Category="Top Rated Movies" Movies="@_topRatedMovies"/>
-<MudDivider Style="margin-bottom:5px;" DividerType="DividerType.FullWidth" > </MudDivider>
+<MudDivider Style="margin-top:6px;" DividerType="DividerType.FullWidth" > </MudDivider>
+
+@if (_NowPlayingMovies==null)
+{
+    return;
+}
+<MudDivider Style="margin-bottom:10px;" DividerType="DividerType.FullWidth" > </MudDivider>
+<MovieSlider Category="Now Playing" Movies="@_NowPlayingMovies"/>
+<MudDivider Style="margin-top:6px;" DividerType="DividerType.FullWidth" > </MudDivider>
+
+@if (_UpcomingMovies==null)
+{
+    return;
+}
+<MudDivider Style="margin-bottom:10px;" DividerType="DividerType.FullWidth" > </MudDivider>
+<MovieSlider Category="Upcoming Movies" Movies="@_UpcomingMovies"/>
+<MudDivider Style="margin-top:6px;" DividerType="DividerType.FullWidth" > </MudDivider>
+
+@if (_PopularMovies==null)
+{
+    return;
+}
+<MudDivider Style="margin-bottom:10px;" DividerType="DividerType.FullWidth" > </MudDivider>
+<MovieSlider Category="Popular now" Movies="@_PopularMovies"/>
+<MudDivider Style="margin-top:6px;" DividerType="DividerType.FullWidth" > </MudDivider>
+
+
+
 @if (PopularPeople == null)
 {
     return;
 }
-<MudDivider Style="padding-bottom:5px;" DividerType="DividerType.FullWidth" > </MudDivider>
+<MudDivider Style="margin-bottom:10px;" DividerType="DividerType.FullWidth" > </MudDivider>
 <PersonSlider Category="Popular People" People="PopularPeople"/>
+<MudDivider Style="margin-top:6px;" DividerType="DividerType.FullWidth" > </MudDivider>
+
 
 
 
@@ -46,7 +75,10 @@
     private ClaimsPrincipal? User;
     private string? GivenName;
     private List<TMDBMovie> _topRatedMovies{ get; set; }
-    private List<TMDBPerson> PopularPeople;
+    private List<TMDBPerson> PopularPeople { get; set; }
+    private List<TMDBMovie> _NowPlayingMovies{ get; set; }
+    private List<TMDBMovie> _PopularMovies{ get; set; }
+    private List<TMDBMovie> _UpcomingMovies{ get; set; }
 
     protected override void OnInitialized()
     {
@@ -71,19 +103,15 @@
         }
         catch { }
 
-        if(GivenName == null)
-        {
-            Snackbar.Add("Welcome Guest. Care to join?", Severity.Info, config => { config.HideIcon = true; });
-        }
-        else
-        {
-            Snackbar.Add("Welcome back." + GivenName, Severity.Success, config => { config.HideIcon = true; });
-        }
+
     }
 
     protected override async Task OnInitializedAsync()    {
         _topRatedMovies = await DataService.GetTopRatedMoviesAsync();
         PopularPeople = await DataService.GetPopularPersonalAsync();
+        _NowPlayingMovies = await DataService.GetNowPlayingMovies();
+        _PopularMovies = await DataService.GetPopularMovies();
+        _UpcomingMovies = await DataService.GetUpcomingMovies();
     }
 
     

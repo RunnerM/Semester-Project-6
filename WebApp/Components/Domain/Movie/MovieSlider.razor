@@ -4,7 +4,7 @@
 @inject IDataService DataService
 
 
-<MudText Color="Color.Default" Typo="Typo.h5">@Category</MudText>
+<MudText Style="font-size:30px;user-select:none;"  Color="Color.Default" Typo="Typo.button">@Category</MudText>
 <MudDivider/>
 
 @if (Movies == null)
@@ -16,7 +16,7 @@ else
     <div class="d-flex flex-row justify-space-around">
         <MudStack>
             <MudSpacer/>
-            <MudIconButton Icon="@Icons.Material.Filled.ArrowBack" aria-label="delete" OnClick="OnBackward"></MudIconButton>
+            <MudIconButton Color="Color.Primary" Icon="@Icons.Material.Filled.ArrowBack" aria-label="delete" OnClick="OnBackward"></MudIconButton>
             <MudSpacer/>
         </MudStack>
         @foreach (var movie in activeMovies)
@@ -25,7 +25,7 @@ else
         }
         <MudStack>
             <MudSpacer/>
-            <MudIconButton Icon="@Icons.Material.Filled.ArrowForward" aria-label="delete" OnClick="OnForward"></MudIconButton>
+            <MudIconButton Color="Color.Primary" Icon="@Icons.Material.Filled.ArrowForward" aria-label="delete" OnClick="OnForward"></MudIconButton>
             <MudSpacer/>
         </MudStack>
     </div>

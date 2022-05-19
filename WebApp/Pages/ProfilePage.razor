@@ -3,6 +3,7 @@
 @using System.Security.Claims
 @using WebApp.Shared;
 
+
 @inject NavigationManager NavigationManager
 @inject IHttpContextAccessor _httpContextAccessor
 @inject HttpClient Http
@@ -13,7 +14,7 @@
     <MudItem xs=12 sm=12 md=12 lg=12 xl=12>
         <MudText Align="Align.Center" Typo="Typo.h3">Your Profile</MudText>
     </MudItem>
-    <MudItem xs=12 sm=12 md=6 lg=6 xl=6>
+    <MudItem xs=12 sm=12 md=12 lg=12 xl=12>
         <MudPaper> 
             
             <MudDivider Style="margin-top:auto;" DividerType="DividerType.FullWidth"/>
@@ -21,11 +22,7 @@
             <MudDivider Style="margin-top:5px;" DividerType="DividerType.FullWidth" Vertical="true"/>
             <MudImage Style="margin:auto" Fluid=true Width="180" ObjectFit="ObjectFit.Cover" Src="@Avatar"></MudImage>
             <MudDivider Style="margin:auto" DividerType="DividerType.FullWidth"/>
-        </MudPaper>
-    </MudItem>
-    <MudItem  xs=12 sm=12 md=6 lg=6 xl=6>
-        <MudPaper>
-            <MudDivider Style="margin-top:5px;" DividerType="DividerType.FullWidth"/>
+             <MudDivider Style="margin-top:5px;" DividerType="DividerType.FullWidth"/>
             <MudTextField @bind-Value="@GivenName" Label="First Name" ReadOnly="true" Variant="Variant.Outlined" />
             <MudDivider Style="margin-top:5px;" DividerType="DividerType.FullWidth"/>
             <MudTextField @bind-Value="@Surname" Label="Surname" ReadOnly="true" Variant="Variant.Outlined"/>
@@ -34,24 +31,7 @@
             <MudDivider Style="margin-top:5px;" DividerType="DividerType.FullWidth"/>
         </MudPaper>
     </MudItem>
-    <MudItem xs=12 sm=12 md=12 lg=12 xl=12>
-        <MudPaper>
-        <MudText Align="Align.Center" Typo="Typo.h3">Preferences</MudText>
-        <MudSwitch @bind-Checked="@_isDarkMode" Color="Color.Primary" Class="ma-4" T="bool" Label="Toggle Light/Dark Mode"/>
-        </MudPaper>
-
-    </MudItem>
-
 </MudGrid>
-
-
-
-
-
-
-
-
-
 
 @code {
 
@@ -63,8 +43,8 @@
     public string? Avatar { get; set; }
     public string?  routeId { get; set; }
     public string? user_mail { get; set; }
-    public MudTheme _theme = new();
-    public bool _isDarkMode;
+
+
     protected override void OnInitialized()
     {
         base.OnInitialized();

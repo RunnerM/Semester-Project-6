@@ -97,4 +97,31 @@ public class TMDBClient : ITMDBClient
         all.AddRange(movies.crew);
         return all;
     }
+
+    //Movies
+
+    public async Task<List<TMDBMovie>> GetNowPlayingMoviesAsync()
+    {
+        var result = await _client.GetAsync(BaseUrl + "movie/now_playing?" + ApiKey);
+        result.EnsureSuccessStatusCode();
+        var json = await result.Content.ReadAsStringAsync();
+        var movies = JsonSerializer.Deserialize<TMDBPage<TMDBMovie>>(json);
+        return movies.Results.ToList();
+    }
+    public async Task<List<TMDBMovie>> GetPopularMoviesAsync()
+    {
+        var result = await _client.GetAsync(BaseUrl + "movie/popular?" + ApiKey);
+        result.EnsureSuccessStatusCode();
+        var json = await result.Content.ReadAsStringAsync();
+        var movies = JsonSerializer.Deserialize<TMDBPage<TMDBMovie>>(json);
+        return movies.Results.ToList();
+    }
+    public async Task<List<TMDBMovie>> GetUpcomingMoviesAsync()
+    {
+        var result = await _client.GetAsync(BaseUrl + "movie/upcoming?" + ApiKey);
+        result.EnsureSuccessStatusCode();
+        var json = await result.Content.ReadAsStringAsync();
+        var movies = JsonSerializer.Deserialize<TMDBPage<TMDBMovie>>(json);
+        return movies.Results.ToList();
+    }
 }

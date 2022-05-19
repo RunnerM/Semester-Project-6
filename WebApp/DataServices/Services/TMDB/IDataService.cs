@@ -17,4 +17,9 @@ public interface IDataService
 
     public Task<List<TMDBMovie>> GetTrendingMovies();
     public Task<List<TMDBMovie>> GetCreditsForPersonAsync(int personId);
+
+    //Movies
+    public Task<List<TMDBMovie>> GetNowPlayingMovies();
+    public Task<List<TMDBMovie>> GetPopularMovies();
+    public Task<List<TMDBMovie>> GetUpcomingMovies();
 }
