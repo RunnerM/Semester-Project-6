@@ -39,7 +39,7 @@ public class Test
                         Id = Guid.NewGuid(),
                         Title = "title",
                         TMDBExternalId = "id",
-                        Year = 2000
+                        ReleaseDate = "2000"
                     }
                 }
             }
