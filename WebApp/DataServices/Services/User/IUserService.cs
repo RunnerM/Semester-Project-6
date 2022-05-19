@@ -3,6 +3,7 @@ namespace WebApp.DataServices.Services.User;
 public interface IUserService
 {
     public Task<Data.Domain.User> GetUserByIdAsync(Guid id);
+    public Task<Data.Domain.User> GetUserByExtarnalIdAsync(string id);
     public Task<Data.Domain.User> GetUserByEmailAsync(string email);
     
     public Task<bool> DoesUserExistAsync(Guid id);
