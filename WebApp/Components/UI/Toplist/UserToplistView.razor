@@ -1,0 +1,82 @@
+@using WebApp.DataServices.Services.TMDB
+@using WebApp.DataServices.Services.User
+@using Data.Domain
+@inject IDataService DataService
+@inject IUserService UserService
+@inject IToplistService ToplistService
+
+
+<MudDataGrid Items="@_items" Hover="true" Dense="false" Striped="true" Bordered="false">
+    <ToolBarContent>
+        <MudText Typo="Typo.h4">My Top List</MudText>
+        <MudSpacer/>
+    </ToolBarContent>
+    <Columns>
+        <Column T="Model" Field="@nameof(Model.Rank)"/>
+        <Column T="Model" Field="@nameof(Model.Title)"/>
+        <Column T="Model" Field="@nameof(Model.ReleaseDate)"/>
+        <Column T="Model" Title="up">
+            <CellTemplate>
+                <MudIconButton Size="@Size.Small" Icon="@Icons.Outlined.ArrowUpward" OnClick="@(()=>OnUp(@context.Item))"/>
+            </CellTemplate>
+        </Column>
+        <Column T="Model" Title="down" >
+            <CellTemplate>
+                <MudIconButton Size="@Size.Small" Icon="@Icons.Outlined.ArrowDownward" OnClick="@(()=>OnDown(@context.Item))"/>
+            </CellTemplate>
+        </Column>
+    </Columns>
+</MudDataGrid>
+
+
+@code {
+    // [Parameter]
+    // public string extarnalUserId { get; set; }
+
+    private User? _user;
+
+    protected override async Task OnInitializedAsync()
+    {
+    // if (!await ToplistService.InitToplist(extarnalUserId.ToString()))
+    //     throw new Exception("user is not registered");
+    // _user = await UserService.GetUserByExtarnalIdAsync(extarnalUserId);
+    }
+
+    public class Model
+    {
+        public Model(int rank, string title, string releaseDate)
+        {
+            Rank = rank;
+            Title = title;
+            ReleaseDate = releaseDate;
+        }
+        public int Rank { get; set; }
+        public string Title { get; set; }
+        public string ReleaseDate { get; set; }
+    }
+
+    List<Model> _items = new List<Model>()
+    {
+        new Model(1, "Title", "2000"),
+        new Model(2, "Title2", "2000"),
+        new Model(3, "Title3", "2000"),
+        new Model(4, "Title4", "2000"),
+        new Model(5, "Title5", "2000"),
+        new Model(6, "Title6", "2000")
+    };
+
+
+    private async Task OnDown(Model item)
+    {
+        // _items.Single(x => x.Rank == item.Rank - 1).Rank = item.Rank;
+        // item.Rank -= 1;
+        //
+
+    }
+
+    private async Task OnUp(Model item)
+    {
+        
+    }
+
+}
