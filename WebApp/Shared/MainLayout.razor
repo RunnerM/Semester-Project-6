@@ -12,7 +12,7 @@
             <MudIconButton Icon="@Icons.Material.Filled.Brightness4" OnClick="@ToggleTheme"></MudIconButton>
             <LoginControl/>
     </MudAppBar>
-    <MudDrawer @bind-Open="@_open" Elevation="1" Color="Color.Primary">
+    <MudDrawer @bind-Open="@_open" Elevation="1" >
         <MudDrawerHeader>
             <MudStack Row="true">
                 <MudIcon Icon="@Icons.Custom.Uncategorized.Sausage" Color="Color.Secondary" Size="Size.Large"/>
@@ -68,7 +68,13 @@
                 BackgroundGrey = "#27282f",
                 Surface = "#373840",
                 TextPrimary = "#ffffffb2",
-                TextSecondary = "rgba(255,255,255, 0.50)"
+                TextSecondary = "rgba(255,255,255, 0.50)",
+                DrawerText = "#424242ff",
+                DrawerBackground = "rgb(0,163,68)",
+                DrawerIcon = "rgb(255,31,105)",
+                AppbarBackground = "#ffffffff",
+                AppbarText = "424242ff"
+
             }
         };
 

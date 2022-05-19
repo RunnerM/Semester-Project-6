@@ -62,23 +62,33 @@ public class DataService : IDataService
     public async Task<TMDBCast> GetCastByMovieIdAsync(int MovieId)
     {
         var cast = await _tmdbClient.GetCastByMovieIdAsync(MovieId);
+        
         cast.cast = cast.cast.DistinctBy(x => x.Name).ToList();
         cast.crew = cast.crew.DistinctBy(x => x.Name).ToList();
-        cast.cast.ForEach(x =>
+        cast.directors = new List<TMDBPerson>().ToList();
+       
+        cast.cast.ToList().ForEach(x =>
         {
             if (x.ProfilePath == null)
                 x.ProfilePath = DummyImageUrl;
             else
                 x.ProfilePath = ImageBaseUrl + x.ProfilePath;
         });
-        cast.crew.ForEach(x =>
+        cast.crew.ToList().ForEach(x =>
         {
             if (x.ProfilePath == null)
                 x.ProfilePath = DummyImageUrl;
             else
                 x.ProfilePath = ImageBaseUrl + x.ProfilePath;
+
+            if (x.Job.Contains("Director"))
+            {
+                cast.directors.Add(x);
+                cast.crew.Remove(x);
+            }
         });
 
+        cast.directors = cast.directors.DistinctBy(x => x.Name).ToList();
         return cast;
     }
 
