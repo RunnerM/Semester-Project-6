@@ -47,10 +47,28 @@ else
     protected override async Task OnInitializedAsync()
     {
         var cast = await DataService.GetCastByMovieIdAsync(MovieId);
-        People = Type == 1 ? cast.cast : cast.crew;
+
+        switch (Type)
+        {
+            case 1:
+                People = cast.cast;
+                Title = "Cast";
+                break;
+            case 2:
+                People = cast.crew;
+                Title = "Crew";
+                break;
+            case 3:
+                Title = "Directors";
+                People = cast.directors;
+                break;
+
+        }
+
+       // People = Type == 1 ? cast.cast : cast.crew;
         _activePeople = People.Take(6).ToList();
         _currentIndex = 0;
-        Title = Type == 1 ? "Cast" : "Crew";
+       // Title = Type == 1 ? "Cast" : "Crew";
     }
 
     private void OnForward(MouseEventArgs obj)
