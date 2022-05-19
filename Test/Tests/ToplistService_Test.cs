@@ -109,6 +109,7 @@ public class ToplistService_Test
         var user = _context.Set<User>().First();
         user = await _toplistService.MoveUpInToplistAsync("03", user.Id);
         Assert.Equal(3, user.TopLists.Count);
+        Assert.Equal(2, user.TopLists.First(x=>x.Movie.TMDBExternalId == "03").TopListIndex);
     }
 
     [Fact]
@@ -118,5 +119,6 @@ public class ToplistService_Test
         var user = _context.Set<User>().First();
         user = await _toplistService.MoveDownInToplistAsync("01", user.Id);
         Assert.Equal(3, user.TopLists.Count);
+        Assert.Equal(2, user.TopLists.First(x => x.Movie.TMDBExternalId == "01").TopListIndex);
     }
 }
