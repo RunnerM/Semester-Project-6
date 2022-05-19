@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using WebApp.DataServices.Services.TMDB;
+using WebApp.DataServices.Services.User;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -83,5 +84,7 @@ static void AddServices(WebApplicationBuilder builder)
 {
     builder.Services.AddTransient<ITMDBClient,TMDBClient>();
     builder.Services.AddTransient<IDataService,DataService>();
+    builder.Services.AddTransient<IUserService,UserService>();
+    builder.Services.AddTransient<IToplistService,ToplistService>();
 }
     
