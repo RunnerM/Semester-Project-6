@@ -67,10 +67,14 @@ public class ToplistService : IToplistService
         if (user.TopLists.Any(x => x.MovieId == movie.Id))
         {
             var index = user.TopLists.First(x => x.MovieId == movie.Id).TopListIndex;
-            if (index > 0)
+            if (index > 1)
             {
-                user.TopLists.Single(x => x.TopListIndex == index - 1).TopListIndex = index;
-                user.TopLists.Single(x => x.TopListIndex == index).TopListIndex = index - 1;
+                int tempIndex = user.TopLists.Count+2;
+                int index1= user.TopLists.Single(x => x.TopListIndex == index - 1).TopListIndex;
+                int index2= user.TopLists.Single(x => x.TopListIndex == index).TopListIndex; 
+                user.TopLists.Single(x => x.TopListIndex == index).TopListIndex = tempIndex;
+                user.TopLists.Single(x => x.TopListIndex == index - 1).TopListIndex = index2;
+                user.TopLists.Single(x => x.TopListIndex == tempIndex).TopListIndex = index1;
                 await _context.SaveChangesAsync();
             }
         }
@@ -87,8 +91,12 @@ public class ToplistService : IToplistService
             var index = user.TopLists.First(x => x.MovieId == movie.Id).TopListIndex;
             if (index < user.TopLists.Count - 1)
             {
-                user.TopLists.Single(x => x.TopListIndex == index + 1).TopListIndex = index;
-                user.TopLists.Single(x => x.TopListIndex == index).TopListIndex = index + 1;
+                int tempIndex = user.TopLists.Count+2;
+                int index1= user.TopLists.Single(x => x.TopListIndex == index + 1).TopListIndex;
+                int index2= user.TopLists.Single(x => x.TopListIndex == index).TopListIndex; 
+                user.TopLists.Single(x => x.TopListIndex == index).TopListIndex = tempIndex;
+                user.TopLists.Single(x => x.TopListIndex == index + 1).TopListIndex = index2;
+                user.TopLists.Single(x => x.TopListIndex == tempIndex).TopListIndex = index1;
                 await _context.SaveChangesAsync();
             }
         }
