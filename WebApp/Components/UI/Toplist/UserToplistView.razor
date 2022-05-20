@@ -76,6 +76,7 @@ else
 
     private async Task RefreshItems()
     {
+        Items = new List<Model>();
         foreach (var topListItem in User.TopLists)
         {
             Items.Add(new(topListItem.TopListIndex, topListItem.Movie.Title, topListItem.Movie.ReleaseDate,
