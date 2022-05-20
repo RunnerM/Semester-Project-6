@@ -8,13 +8,14 @@
 @inject IToplistService ToplistService
 @inject IHttpContextAccessor HttpContextAccessor
 
-@if (_items.Count == 0)
+@if (Items.Count == 0)
 {
     <MudText Typo="Typo.h3" Style="padding: 40px">Your Top List is empty :(</MudText>
 }
 else
 {
-   <MudTable Items="@_items" Hover="true" Dense="false" Striped="true" Bordered="false">
+    <MudPaper Style="margin-bottom: 30px; margin-top: 30px" Elevation="3">
+        <MudTable AllowUnsorted="false" Items="@Items" Hover="true" Dense="false" Striped="true" Bordered="false"  >
        <ColGroup>
            <col style="width: 20%;" />
            <col style="width: 30%;"/>
@@ -29,7 +30,7 @@ else
        </ToolBarContent>
        <HeaderContent>
            @* InitialDirection="SortDirection.Ascending" SortBy="new Func<Element, object>(x=>x.Name)" </MudTableSortLabel> *@
-           <MudTh>Rank</MudTh>
+           <MudTh><MudTableSortLabel InitialDirection="SortDirection.Ascending" SortBy="new Func<Model, object>(x=>x.Rank)">Rank</MudTableSortLabel></MudTh>
            <MudTh>Title</MudTh>
            <MudTh>Release Date</MudTh>
            <MudTh>Move Up</MudTh>
@@ -51,6 +52,7 @@ else
            </MudTd>
        </RowTemplate>
    </MudTable> 
+</MudPaper>
 }
 
 
@@ -60,25 +62,26 @@ else
     public string extarnalUserId { get; set; }
 
     private User? User { get; set; }
-    private List<Model> _items = new();
+    private List<Model> Items { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
+        Items = new List<Model>();
         extarnalUserId = HttpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-        
         if (!await ToplistService.InitToplist(extarnalUserId))
             throw new Exception("user is not registered");
         User = await UserService.GetUserByExtarnalIdAsync(extarnalUserId);
-        RefreshItems();
+       await RefreshItems();
     }
 
-    private void RefreshItems()
+    private async Task RefreshItems()
     {
         foreach (var topListItem in User.TopLists)
         {
-            _items.Add(new(topListItem.TopListIndex, topListItem.Movie.Title, topListItem.Movie.ReleaseDate,
+            Items.Add(new(topListItem.TopListIndex, topListItem.Movie.Title, topListItem.Movie.ReleaseDate,
                 topListItem.Movie.TMDBExternalId));
         }
+        await InvokeAsync(StateHasChanged);
     }
 
     public class Model
@@ -101,22 +104,19 @@ else
     private async Task OnDown(Model item)
     {
         User = await ToplistService.MoveDownInToplistAsync(item.ExtarnalId, UserService.GetUserByExtarnalIdAsync(extarnalUserId).GetAwaiter().GetResult().Id);
-        RefreshItems();
-        StateHasChanged();
+        await RefreshItems();
     }
 
     private async Task OnUp(Model item)
     {
         User = await ToplistService.MoveUpInToplistAsync(item.ExtarnalId, UserService.GetUserByExtarnalIdAsync(extarnalUserId).GetAwaiter().GetResult().Id);
-        RefreshItems();
-        StateHasChanged();
+        await RefreshItems();
     }
 
     private async Task OnDelete(Model item)
     {
         User = await ToplistService.RemoveFromToplistAsync(item.ExtarnalId, UserService.GetUserByExtarnalIdAsync(extarnalUserId).GetAwaiter().GetResult().Id);
-        RefreshItems();
-        StateHasChanged();
+        await RefreshItems();
     }
 
 }
