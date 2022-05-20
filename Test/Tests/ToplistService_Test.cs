@@ -29,6 +29,8 @@ public class ToplistService_Test
         });
         _toplistService = new ToplistService(_dataServiceMock.Object); 
         Assert.NotNull(_toplistService);
+        _context.Database.EnsureDeleted();
+        _context.Database.EnsureCreated();
     }
 
     private void seed()
