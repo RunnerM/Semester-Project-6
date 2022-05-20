@@ -69,7 +69,7 @@ else
         if (isinit == false)
         {
             //If not exist , will be init
-            var user = await _topListService.AddToToplistAsync(_movie.Id.ToString(), ToGuid(_userService.GetUserByExtarnalIdAsync(routeId).Id));
+            var user = await _topListService.AddToToplistAsync(_movie.Id.ToString(), _userService.GetUserByExtarnalIdAsync(routeId).GetAwaiter().GetResult().Id);
             //if throws an error is because it is my user is not cached yet.
         }
         //check if the movie is added, return success if so.
@@ -79,12 +79,5 @@ else
         
 
     }
-
-    public static Guid ToGuid(int value)
-{
-    byte[] bytes = new byte[16];
-    BitConverter.GetBytes(value).CopyTo(bytes, 0);
-    return new Guid(bytes);
-}
 
 }
