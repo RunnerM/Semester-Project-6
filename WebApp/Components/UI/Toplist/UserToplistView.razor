@@ -8,33 +8,40 @@
 
 
 <MudTable Items="@_items" Hover="true" Dense="false" Striped="true" Bordered="false">
+    <ColGroup>
+        <col style="width: 20%;" />
+        <col style="width: 30%;"/>
+        <col style="width: 20%;"/>
+        <col style="width: 10%;"/>
+        <col style="width: 10%;"/>
+        <col style="width: 10%;"/>
+    </ColGroup>
     <ToolBarContent>
         <MudText Typo="Typo.h4">My Top List</MudText>
         <MudSpacer/>
     </ToolBarContent>
     <HeaderContent>
-        @* InitialDirection="SortDirection.Ascending" SortBy="new Func<Element, object>(x=>x.Name)" *@
-        <MudTh><MudTableSortLabel>Rank</MudTableSortLabel></MudTh>
+        @* InitialDirection="SortDirection.Ascending" SortBy="new Func<Element, object>(x=>x.Name)" </MudTableSortLabel> *@
+        <MudTh>Rank</MudTh>
         <MudTh>Title</MudTh>
         <MudTh>Release Date</MudTh>
         <MudTh>Move Up</MudTh>
         <MudTh>Move Down</MudTh>
+        <MudTh>Remove</MudTh>
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="@nameof(Model.Rank)">@context.Rank</MudTd>
         <MudTd DataLabel="@nameof(Model.Title)">@context.Title</MudTd>
         <MudTd DataLabel="@nameof(Model.ReleaseDate)">@context.ReleaseDate</MudTd>
-        
-        <Column T="Model" Title="up">
-            <CellTemplate>
-                <MudIconButton Size="@Size.Small" Icon="@Icons.Outlined.ArrowUpward" OnClick="@(()=>OnUp(@context.Item))"/>
-            </CellTemplate>
-        </Column>
-        <Column T="Model" Title="down" >
-            <CellTemplate>
-                <MudIconButton Size="@Size.Small" Icon="@Icons.Outlined.ArrowDownward" OnClick="@(()=>OnDown(@context.Item))"/>
-            </CellTemplate>
-        </Column>
+        <MudTd Title="up">
+            <MudIconButton Size="@Size.Small" Icon="@Icons.Outlined.ArrowUpward" OnClick="@(() => OnUp(@context))"/>
+        </MudTd>
+        <MudTd DataLabel="down">
+            <MudIconButton Size="@Size.Small" Icon="@Icons.Outlined.ArrowDownward" OnClick="@(() => OnDown(@context))"/>
+        </MudTd>
+        <MudTd DataLabel="down">
+            <MudIconButton Size="@Size.Small" Icon="@Icons.Outlined.Delete" OnClick="@(() => OnDelete(@context))"/>
+        </MudTd>
     </RowTemplate>
 </MudTable>
 
@@ -60,6 +67,7 @@
             Title = title;
             ReleaseDate = releaseDate;
         }
+
         public int Rank { get; set; }
         public string Title { get; set; }
         public string ReleaseDate { get; set; }
@@ -78,15 +86,17 @@
 
     private async Task OnDown(Model item)
     {
-        // _items.Single(x => x.Rank == item.Rank - 1).Rank = item.Rank;
-        // item.Rank -= 1;
-        //
-
+    // _items.Single(x => x.Rank == item.Rank - 1).Rank = item.Rank;
+    // item.Rank -= 1;
+    //
     }
 
     private async Task OnUp(Model item)
     {
-        
+    }
+
+    private async Task OnDelete(Model item)
+    {
     }
 
 }
