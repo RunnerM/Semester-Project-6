@@ -1,20 +1,30 @@
 @using WebApp.DataServices.Services.TMDB
 @using WebApp.DataServices.Services.User
 @using Data.Domain
+@using EFCore.Utils
 @inject IDataService DataService
 @inject IUserService UserService
 @inject IToplistService ToplistService
 
 
-<MudDataGrid Items="@_items" Hover="true" Dense="false" Striped="true" Bordered="false">
+<MudTable Items="@_items" Hover="true" Dense="false" Striped="true" Bordered="false">
     <ToolBarContent>
         <MudText Typo="Typo.h4">My Top List</MudText>
         <MudSpacer/>
     </ToolBarContent>
-    <Columns>
-        <Column T="Model" Field="@nameof(Model.Rank)"/>
-        <Column T="Model" Field="@nameof(Model.Title)"/>
-        <Column T="Model" Field="@nameof(Model.ReleaseDate)"/>
+    <HeaderContent>
+        @* InitialDirection="SortDirection.Ascending" SortBy="new Func<Element, object>(x=>x.Name)" *@
+        <MudTh><MudTableSortLabel>Rank</MudTableSortLabel></MudTh>
+        <MudTh>Title</MudTh>
+        <MudTh>Release Date</MudTh>
+        <MudTh>Move Up</MudTh>
+        <MudTh>Move Down</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="@nameof(Model.Rank)">@context.Rank</MudTd>
+        <MudTd DataLabel="@nameof(Model.Title)">@context.Title</MudTd>
+        <MudTd DataLabel="@nameof(Model.ReleaseDate)">@context.ReleaseDate</MudTd>
+        
         <Column T="Model" Title="up">
             <CellTemplate>
                 <MudIconButton Size="@Size.Small" Icon="@Icons.Outlined.ArrowUpward" OnClick="@(()=>OnUp(@context.Item))"/>
@@ -25,8 +35,8 @@
                 <MudIconButton Size="@Size.Small" Icon="@Icons.Outlined.ArrowDownward" OnClick="@(()=>OnDown(@context.Item))"/>
             </CellTemplate>
         </Column>
-    </Columns>
-</MudDataGrid>
+    </RowTemplate>
+</MudTable>
 
 
 @code {
