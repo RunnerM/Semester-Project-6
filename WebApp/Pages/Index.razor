@@ -10,66 +10,19 @@
 
 <PageTitle>Home</PageTitle>
 
-<AuthorizeView>
-	<Authorized>
-
-        
-	</Authorized>
-
-	<NotAuthorized>
-
-        
-	</NotAuthorized>
-</AuthorizeView>
 <MudDivider Style="margin-bottom:2px;" DividerType="DividerType.FullWidth" > </MudDivider>
 <MudDivider Style="margin-bottom:2px;height:10px" DividerType="DividerType.FullWidth" > </MudDivider>
 <MovieCarousel/>
 <MudDivider Style="margin-top:2px;height:10px" DividerType="DividerType.FullWidth" > </MudDivider>
 
-@if (_topRatedMovies==null)
-{
-    return;
-}
-<MudDivider Style="margin-top:10px;" DividerType="DividerType.FullWidth" > </MudDivider>
-<MovieSlider Category="Top Rated Movies" Movies="@_topRatedMovies"/>
-<MudDivider Style="margin-top:6px;" DividerType="DividerType.FullWidth" > </MudDivider>
+<AuthorizeView>
+	<Authorized>
+        <UserToplistView/>
+	</Authorized>
+    <NotAuthorized>
+    </NotAuthorized>
+</AuthorizeView>
 
-@if (_NowPlayingMovies==null)
-{
-    return;
-}
-<MudDivider Style="margin-bottom:10px;" DividerType="DividerType.FullWidth" > </MudDivider>
-<MovieSlider Category="Now Playing" Movies="@_NowPlayingMovies"/>
-<MudDivider Style="margin-top:6px;" DividerType="DividerType.FullWidth" > </MudDivider>
-
-@if (_UpcomingMovies==null)
-{
-    return;
-}
-<MudDivider Style="margin-bottom:10px;" DividerType="DividerType.FullWidth" > </MudDivider>
-<MovieSlider Category="Upcoming Movies" Movies="@_UpcomingMovies"/>
-<MudDivider Style="margin-top:6px;" DividerType="DividerType.FullWidth" > </MudDivider>
-
-@if (_PopularMovies==null)
-{
-    return;
-}
-<MudDivider Style="margin-bottom:10px;" DividerType="DividerType.FullWidth" > </MudDivider>
-<MovieSlider Category="Popular now" Movies="@_PopularMovies"/>
-<MudDivider Style="margin-top:6px;" DividerType="DividerType.FullWidth" > </MudDivider>
-
-
-
-@if (PopularPeople == null)
-{
-    return;
-}
-<MudDivider Style="margin-bottom:10px;" DividerType="DividerType.FullWidth" > </MudDivider>
-<PersonSlider Category="Popular People" People="PopularPeople"/>
-<MudDivider Style="margin-top:6px;" DividerType="DividerType.FullWidth" > </MudDivider>
-
-
-<UserToplistView/>
 
 
 

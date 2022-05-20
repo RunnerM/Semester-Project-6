@@ -59,25 +59,17 @@ else
         var temp_routeId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier); 
         if (temp_routeId != null)
         {
-            routeId = temp_routeId.Value.ToString();
+            routeId = temp_routeId.Value;
         }
     }
 
     public async void AddToToplist()
     {
-        var isinit = await _topListService.InitToplist(routeId.ToString());
-        if (isinit == false)
+        if (await _topListService.InitToplist(routeId))
         {
-            //If not exist , will be init
             var user = await _topListService.AddToToplistAsync(_movie.Id.ToString(), _userService.GetUserByExtarnalIdAsync(routeId).GetAwaiter().GetResult().Id);
-            //if throws an error is because it is my user is not cached yet.
         }
         //check if the movie is added, return success if so.
-
-        
-
-        
-
     }
 
 }
