@@ -2,7 +2,7 @@
 @inject IDataService DataService
 @inject NavigationManager NavigationManager
 
-<MudTextField Adornment="Adornment.End" AdornmentColor="Color.Info" AdornmentIcon="@Icons.Outlined.Search" @bind-Value="SearchTerm" OnAdornmentClick="@OnSearchClick"  Style="width: 400px"></MudTextField>
+<MudTextField Adornment="Adornment.End" AdornmentColor="Color.Dark" AdornmentIcon="@Icons.Outlined.Search" @bind-Value="SearchTerm" OnAdornmentClick="@OnSearchClick"  Style="width: 400px; color: white"></MudTextField>
 
 @code {
     public string? SearchTerm { get; set; }
