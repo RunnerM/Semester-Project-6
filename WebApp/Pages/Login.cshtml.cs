@@ -56,7 +56,7 @@ namespace WebApp.Pages
                 }
                 
             }
-            return LocalRedirect("/");
+            return LocalRedirect("/home");
         }
 
 
