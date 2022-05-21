@@ -49,7 +49,7 @@ public class ToplistService : IToplistService
         {
             var index = user.TopLists.First(x => x.MovieId == movie.Id).TopListIndex;
             user.TopLists.Remove(user.TopLists.Single(x => x.MovieId == movie.Id));
-            for (int i = index; i < user.TopLists.Count; i++)
+            for (int i = index+1; i <= user.TopLists.Count+1; i++)
             {
                 user.TopLists.Single(x => x.TopListIndex == i).TopListIndex--;
             }
