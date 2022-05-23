@@ -18,7 +18,7 @@ else
         <MudText Typo="Typo.h3" Color="Color.Default" Style="padding-bottom: 10px">@_movie.Title</MudText>
     <MudSpacer/>
         <MudTooltip Text="@TooltipText">
-            <MudToggleIconButton ToggledIcon="@Icons.Material.Filled.Favorite" Icon="@Icons.Material.Filled.Favorite" ToggledColor="Color.Error" Color="Color.Default" Size="Size.Large" ToggledChanged="@ManageToplist" Toggled="@toggled"></MudToggleIconButton>
+             <MudToggleIconButton Icon="@Icons.Material.Filled.Favorite" Color="Color.Default" Size="Size.Large" ToggledSize="Size.Large"  ToggledIcon="@Icons.Material.Filled.Favorite" ToggledColor="Color.Error" ToggledChanged="@ManageToplist" Toggled="@toggled"></MudToggleIconButton>
        </MudTooltip>
     </MudStack>
     <MudDivider  Vertical="true" Light="true"/>
@@ -49,11 +49,16 @@ else
     private TMDBMovie _movie;
     private ClaimsPrincipal? User;
     public string?  routeId { get; set; }
-    private bool toggled { get; set; }
+    public bool toggled { get; set; }
     public string TooltipText { get; set; } = "Add to toplist";
 
     [Parameter]
     public int movieId { get; set; }
+
+    public void OnToggle(bool value)
+    {
+        toggled = value;
+    }
 
     protected override async Task OnInitializedAsync()
     {
@@ -63,21 +68,26 @@ else
         {
             routeId = temp_routeId.Value;
         }
+
     }
 
-    private async void ManageToplist()
+    private async void ManageToplist(bool value)
     {
+        OnToggle(value);
         if (await _topListService.InitToplist(routeId))
         {
             if (toggled)
             {
-                await _topListService.AddToToplistAsync(_movie.Id.ToString(), _userService.GetUserByExtarnalIdAsync(routeId).GetAwaiter().GetResult().Id);
+                await _topListService.RemoveFromToplistAsync(_movie.Id.ToString(), _userService.GetUserByExtarnalIdAsync(routeId).GetAwaiter().GetResult().Id);
                 TooltipText = "Remove from toplist";
+                
             }
             else
             {
-                await _topListService.RemoveFromToplistAsync(_movie.Id.ToString(), _userService.GetUserByExtarnalIdAsync(routeId).GetAwaiter().GetResult().Id);
+                
+                await _topListService.AddToToplistAsync(_movie.Id.ToString(), _userService.GetUserByExtarnalIdAsync(routeId).GetAwaiter().GetResult().Id);
                 TooltipText = "Add to toplist";
+
 
             }
         }
