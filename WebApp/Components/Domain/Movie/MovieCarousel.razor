@@ -17,7 +17,7 @@
 else
 {
 <MudItem xs="12" md="12" lg="12">
-    <MudCarousel Class="d-flex flex-column mud-width-full " style="height:40.625rem;user-select:none;" ItemsSource="@currentMovies" @bind-SelectedIndex="currentIndex"  ShowArrows="true" ShowBullets="true" AutoCycle="true">
+    <MudCarousel Class="d-flex flex-column mud-width-full rounded-lg" style="height:40.625rem;user-select:none;" ItemsSource="@currentMovies" @bind-SelectedIndex="currentIndex"  ShowArrows="true" ShowBullets="true" AutoCycle="true">
         <BulletTemplate Context="selected">
         <div Class="mud-button-root mud-icon-button mud-icon-button-color-inherit mud-ripple mud-ripple-icon">
             <span class="mud-icon-button-label">

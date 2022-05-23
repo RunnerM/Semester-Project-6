@@ -4,31 +4,47 @@
 
 <MudLayout>
     <MudAppBar Elevation="1">
-        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Default" Edge="Edge.Start"  OnClick="@ToggleDrawer"/>
         <MudItem Style="padding-bottom:22px">
             <TopbarSearch/>
         </MudItem>
         <MudSpacer/>
-            <MudIconButton Icon="@Icons.Material.Filled.Brightness4" OnClick="@ToggleTheme"></MudIconButton>
-            <LoginControl/>
+        <MudTooltip Text="@DarkModeText" Placement="Placement.Bottom">
+            <MudToggleIconButton Icon="@Icons.Material.Filled.LightMode" ToggledIcon="@Icons.Material.Filled.DarkMode" ToggledChanged="@ToggleTheme" Color="Color.Default"></MudToggleIconButton>
+        </MudTooltip>
+        <LoginControl/>
     </MudAppBar>
-    <MudDrawer @bind-Open="@_open" Elevation="1" >
-        <MudDrawerHeader>
-            <MudStack Row="true">
-                <MudIcon Icon="@Icons.Custom.Uncategorized.Sausage" Color="Color.Secondary" Size="Size.Large"/>
-                <MudText Typo="Typo.h6" Style="padding-top: 5px">Adonis Prime</MudText>
-            </MudStack>
-        </MudDrawerHeader>
-        <MudDivider Class="my-2" />
+    <MudDrawer @bind-Open="@_open" Elevation="1" Variant="@DrawerVariant.Mini">
+
+        @if (_open)
+        {
+            <MudDrawerHeader>
+                <MudStack Row>
+                    <MudIcon Icon="@Icons.Custom.Uncategorized.Sausage" Color="Color.Secondary" Size="Size.Large" />
+                    <MudText Typo="Typo.h6" Style="padding-top: 3px">@TitleText</MudText>
+                </MudStack>
+            </MudDrawerHeader>
+        }
+        else
+        {
+            <MudDrawerHeader>
+                <MudIcon Icon="@Icons.Custom.Uncategorized.Sausage" Color="Color.Secondary" Size="Size.Large" Style="position: absolute; top: 13px;left: 13px"/>
+            </MudDrawerHeader>
+        }
+
         <NavMenu/>
-        
+        <MudSpacer/>
+        <MudStack Row>
+            <MudSpacer/>
+            <MudToggleIconButton Icon="@Icons.Material.Filled.ArrowRight" ToggledIcon="@Icons.Material.Filled.ArrowLeft" Color="Color.Default" Edge="Edge.Start" ToggledChanged="@ToggleDrawer"/>
+        </MudStack>
     </MudDrawer>
     <MudMainContent Class="pt-16 px-16">
-        
         <MudContainer Class="mt-6">
             @Body
+            <MudScrollToTop>
+                <MudFab Color="Color.Tertiary" Icon="@Icons.Filled.ArrowCircleUp" />
+            </MudScrollToTop>
         </MudContainer>
-     
     </MudMainContent>
 </MudLayout>
 
@@ -39,52 +55,53 @@
 @code{
     private bool _open = false;
     private string _searchTerm = "";
-
     public MudTheme _theme = new();
     public bool _isLightMode = true;
-    
+    public string TitleText { get; set; }
+    public string DarkModeText { get; set; } = "Dark Mode";
+
 
     private void ToggleTheme()
     {
         _isLightMode = !_isLightMode;
-        if(!_isLightMode)
+        if (!_isLightMode)
         {
             _theme = GenerateDarkTheme();
+            DarkModeText = "Light Mode";
             StateHasChanged();
         }
         else
         {
             _theme = new MudTheme();
+            DarkModeText = "Dark Mode";
             StateHasChanged();
         }
     }
 
     private MudTheme GenerateDarkTheme() => new MudTheme
+    {
+        Palette = new Palette()
         {
-            Palette = new Palette()
-            {
-                Black = "#27282f",
-                Background = "#32343d",
-                BackgroundGrey = "#27282f",
-                Surface = "#373840",
-                TextPrimary = "#ffffffb2",
-                TextSecondary = "rgba(255,255,255, 0.50)",
-                DrawerText = "#424242ff",
-                DrawerBackground = "rgb(0,163,68)",
-                DrawerIcon = "rgb(255,31,105)",
-                AppbarBackground = "#ffffffff",
-                AppbarText = "424242ff"
-
-            }
-        };
+            Black = "#27282f",
+            Background = "#32343d",
+            BackgroundGrey = "#27282f",
+            Surface = "#373840",
+            TextPrimary = "#ffffffb2",
+            TextSecondary = "rgba(255,255,255, 0.50)",
+            DrawerText = "#424242ff",
+            DrawerBackground = "rgb(0,163,68)",
+            DrawerIcon = "rgb(255,31,105)",
+            AppbarBackground = "#ffffffff",
+            AppbarText = "424242ff"
+        }
+    };
 
 
     void ToggleDrawer()
     {
         _open = !_open;
+        TitleText = _open ? "AdonisPrime" : "";
     }
-    
-    
+
 
 }
-

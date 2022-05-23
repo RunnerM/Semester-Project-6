@@ -1,82 +1,123 @@
 @using WebApp.DataServices.Services.TMDB
 @using WebApp.DataServices.Services.User
 @using Data.Domain
+@using EFCore.Utils
+@using System.Security.Claims
 @inject IDataService DataService
 @inject IUserService UserService
 @inject IToplistService ToplistService
+@inject IHttpContextAccessor HttpContextAccessor
+
+@if (Items.Count == 0)
+{
+    <MudText Typo="Typo.h3" Style="padding: 40px">Your Top List is empty :(</MudText>
+}
+else
+{
+    <MudPaper Style="margin-bottom: 30px; margin-top: 30px" Elevation="3">
+        <MudTable AllowUnsorted="false" Items="@Items" Hover="true" Dense="false" Striped="true" Bordered="false"  >
+       <ColGroup>
+           <col style="width: 20%;" />
+           <col style="width: 30%;"/>
+           <col style="width: 20%;"/>
+           <col style="width: 10%;"/>
+           <col style="width: 10%;"/>
+           <col style="width: 10%;"/>
+       </ColGroup>
+       <ToolBarContent>
+           <MudText Typo="Typo.h4">My Top List</MudText>
+           <MudSpacer/>
+       </ToolBarContent>
+       <HeaderContent>
+           @* InitialDirection="SortDirection.Ascending" SortBy="new Func<Element, object>(x=>x.Name)" </MudTableSortLabel> *@
+           <MudTh><MudTableSortLabel InitialDirection="SortDirection.Ascending" SortBy="new Func<Model, object>(x=>x.Rank)">Rank</MudTableSortLabel></MudTh>
+           <MudTh>Title</MudTh>
+           <MudTh>Release Date</MudTh>
+           <MudTh>Move Up</MudTh>
+           <MudTh>Move Down</MudTh>
+           <MudTh>Remove</MudTh>
+       </HeaderContent>
+       <RowTemplate>
+           <MudTd DataLabel="@nameof(Model.Rank)">@context.Rank</MudTd>
+           <MudTd DataLabel="@nameof(Model.Title)">@context.Title</MudTd>
+           <MudTd DataLabel="@nameof(Model.ReleaseDate)">@context.ReleaseDate</MudTd>
+           <MudTd Title="up">
+               <MudIconButton Size="@Size.Small" Icon="@Icons.Outlined.ArrowUpward" Color="Color.Default" OnClick="@(async () => await OnUp(@context))"/>
+           </MudTd>
+           <MudTd DataLabel="down">
+               <MudIconButton Size="@Size.Small" Icon="@Icons.Outlined.ArrowDownward" Color="Color.Default" OnClick="@(async () => await OnDown(@context))"/>
+           </MudTd>
+           <MudTd DataLabel="down">
+               <MudIconButton Size="@Size.Small" Icon="@Icons.Outlined.Delete" Color="Color.Primary" OnClick="@(async () => await OnDelete(@context))"/>
+           </MudTd>
+       </RowTemplate>
+   </MudTable> 
+</MudPaper>
+}
 
 
-<MudDataGrid Items="@_items" Hover="true" Dense="false" Striped="true" Bordered="false">
-    <ToolBarContent>
-        <MudText Typo="Typo.h4">My Top List</MudText>
-        <MudSpacer/>
-    </ToolBarContent>
-    <Columns>
-        <Column T="Model" Field="@nameof(Model.Rank)"/>
-        <Column T="Model" Field="@nameof(Model.Title)"/>
-        <Column T="Model" Field="@nameof(Model.ReleaseDate)"/>
-        <Column T="Model" Title="up">
-            <CellTemplate>
-                <MudIconButton Size="@Size.Small" Icon="@Icons.Outlined.ArrowUpward" OnClick="@(()=>OnUp(@context.Item))"/>
-            </CellTemplate>
-        </Column>
-        <Column T="Model" Title="down" >
-            <CellTemplate>
-                <MudIconButton Size="@Size.Small" Icon="@Icons.Outlined.ArrowDownward" OnClick="@(()=>OnDown(@context.Item))"/>
-            </CellTemplate>
-        </Column>
-    </Columns>
-</MudDataGrid>
 
 
 @code {
-    // [Parameter]
-    // public string extarnalUserId { get; set; }
+    public string extarnalUserId { get; set; }
 
-    private User? _user;
+    private User? User { get; set; }
+    private List<Model> Items { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-    // if (!await ToplistService.InitToplist(extarnalUserId.ToString()))
-    //     throw new Exception("user is not registered");
-    // _user = await UserService.GetUserByExtarnalIdAsync(extarnalUserId);
+        Items = new List<Model>();
+        extarnalUserId = HttpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+        if (!await ToplistService.InitToplist(extarnalUserId))
+            throw new Exception("user is not registered");
+        User = await UserService.GetUserByExtarnalIdAsync(extarnalUserId);
+       await RefreshItems();
+    }
+
+    private async Task RefreshItems()
+    {
+        Items = new List<Model>();
+        foreach (var topListItem in User.TopLists)
+        {
+            Items.Add(new(topListItem.TopListIndex, topListItem.Movie.Title, topListItem.Movie.ReleaseDate,
+                topListItem.Movie.TMDBExternalId));
+        }
+        await InvokeAsync(StateHasChanged);
     }
 
     public class Model
     {
-        public Model(int rank, string title, string releaseDate)
+        public Model(int rank, string title, string releaseDate, string extarnalId)
         {
             Rank = rank;
             Title = title;
             ReleaseDate = releaseDate;
+            ExtarnalId = extarnalId;
         }
+
         public int Rank { get; set; }
         public string Title { get; set; }
         public string ReleaseDate { get; set; }
+        public string ExtarnalId { get; set; }
     }
-
-    List<Model> _items = new List<Model>()
-    {
-        new Model(1, "Title", "2000"),
-        new Model(2, "Title2", "2000"),
-        new Model(3, "Title3", "2000"),
-        new Model(4, "Title4", "2000"),
-        new Model(5, "Title5", "2000"),
-        new Model(6, "Title6", "2000")
-    };
 
 
     private async Task OnDown(Model item)
     {
-        // _items.Single(x => x.Rank == item.Rank - 1).Rank = item.Rank;
-        // item.Rank -= 1;
-        //
-
+        User = await ToplistService.MoveDownInToplistAsync(item.ExtarnalId, UserService.GetUserByExtarnalIdAsync(extarnalUserId).GetAwaiter().GetResult().Id);
+        await RefreshItems();
     }
 
     private async Task OnUp(Model item)
     {
-        
+        User = await ToplistService.MoveUpInToplistAsync(item.ExtarnalId, UserService.GetUserByExtarnalIdAsync(extarnalUserId).GetAwaiter().GetResult().Id);
+        await RefreshItems();
+    }
+
+    private async Task OnDelete(Model item)
+    {
+        User = await ToplistService.RemoveFromToplistAsync(item.ExtarnalId, UserService.GetUserByExtarnalIdAsync(extarnalUserId).GetAwaiter().GetResult().Id);
+        await RefreshItems();
     }
 
 }

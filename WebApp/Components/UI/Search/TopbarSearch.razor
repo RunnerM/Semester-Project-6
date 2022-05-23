@@ -1,16 +1,8 @@
 @using WebApp.DataServices.Services.TMDB
 @inject IDataService DataService
 @inject NavigationManager NavigationManager
-<MudAutocomplete
-                 SearchFunc="@SearchFunc" 
-                 AdornmentColor="Color.Default"
-                 @bind-Value="SearchTerm"
-                 Placeholder="Search" 
-                 OnAdornmentClick="OnSearchClick" 
-                 AdornmentIcon="@Icons.Outlined.Search"
-                 ResetValueOnEmptyText="true"
-                 Immediate="true"
-/>
+
+<MudTextField Adornment="Adornment.End" AdornmentColor="Color.Dark" AdornmentIcon="@Icons.Outlined.Search" @bind-Value="SearchTerm" OnAdornmentClick="@OnSearchClick"  Style="width: 400px; color: white"></MudTextField>
 
 @code {
     public string? SearchTerm { get; set; }
@@ -20,27 +12,10 @@
         SearchTerm = string.Empty;
     }
 
-    private async Task<IEnumerable<string>> SearchFunc(string value)
-    {
-        return new string[] { value };
-        // if (string.IsNullOrEmpty(value))
-        //     return Array.Empty<string>();
-        // var movies = await DataService.SearchMovieByTermAsync(value);
-        // return movies.Results.Select(x=>x.Title).ToArray();
-    }
-
     private void OnSearchClick(MouseEventArgs obj)
     {
         NavigationManager.NavigateTo("/search/" + SearchTerm);
         StateHasChanged();
-    }
-    
-    private IEnumerable<string> Validate()
-    {        
-        if (string.IsNullOrWhiteSpace(SearchTerm))
-        {
-            yield return "The State field is required";
-        }
     }
 
 }

@@ -17,8 +17,8 @@ else
     <MudStack Row>
         <MudText Typo="Typo.h3" Color="Color.Default" Style="padding-bottom: 10px">@_movie.Title</MudText>
     <MudSpacer/>
-        <MudTooltip Text="Add To Toplist">
-            <MudIconButton Icon="@Icons.Material.Filled.Favorite" Color="Color.Error" Size="Size.Large" OnClick="@AddToToplist"></MudIconButton>
+        <MudTooltip Text="@TooltipText">
+            <MudToggleIconButton ToggledIcon="@Icons.Material.Filled.Favorite" Icon="@Icons.Material.Filled.Favorite" ToggledColor="Color.Error" Color="Color.Default" Size="Size.Large" ToggledChanged="@ManageToplist" Toggled="@toggled"></MudToggleIconButton>
        </MudTooltip>
     </MudStack>
     <MudDivider  Vertical="true" Light="true"/>
@@ -49,6 +49,8 @@ else
     private TMDBMovie _movie;
     private ClaimsPrincipal? User;
     public string?  routeId { get; set; }
+    private bool toggled { get; set; }
+    public string TooltipText { get; set; } = "Add to toplist";
 
     [Parameter]
     public int movieId { get; set; }
@@ -59,27 +61,28 @@ else
         var temp_routeId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier); 
         if (temp_routeId != null)
         {
-            routeId = temp_routeId.Value.ToString();
+            routeId = temp_routeId.Value;
         }
     }
 
-    public async void AddToToplist()
+    private async void ManageToplist()
     {
-        var isinit = await _topListService.InitToplist(routeId.ToString());
-        if (isinit)
+        if (await _topListService.InitToplist(routeId))
         {
-            //If not exist , will be init
-            var user = await _topListService.AddToToplistAsync(_movie.Id.ToString(), _userService.GetUserByExtarnalIdAsync(routeId).GetAwaiter().GetResult().Id);
+            if (toggled)
+            {
+                await _topListService.AddToToplistAsync(_movie.Id.ToString(), _userService.GetUserByExtarnalIdAsync(routeId).GetAwaiter().GetResult().Id);
+                TooltipText = "Remove from toplist";
+            }
+            else
+            {
+                await _topListService.RemoveFromToplistAsync(_movie.Id.ToString(), _userService.GetUserByExtarnalIdAsync(routeId).GetAwaiter().GetResult().Id);
+                TooltipText = "Add to toplist";
 
-            
-            //if throws an error is because it is my user is not cached yet.
+            }
         }
-        //check if the movie is added, return success if so.
-
-        
-
-        
-
     }
+
+    
 
 }

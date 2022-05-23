@@ -16,9 +16,9 @@ public class UserService : IUserService
 
     public async Task<Data.Domain.User> GetUserByExtarnalIdAsync(string id)
     {
-        if (!await _context.Set<Data.Domain.User>().AnyAsync(u => u.GoogleExternalId == id))
+        if (!_context.Set<Data.Domain.User>().Any(u => u.GoogleExternalId == id))
             throw new Exception("User not found");
-        return await _context.Set<Data.Domain.User>().SingleAsync(u => u.GoogleExternalId == id);
+        return _context.Set<Data.Domain.User>().Single(u => u.GoogleExternalId == id);
     }
 
     public async Task<Data.Domain.User> GetUserByEmailAsync(string email)

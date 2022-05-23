@@ -49,6 +49,12 @@ else
             return;
         activeMovies = Movies.Take(6).ToList();
         currentIndex = 0;
+        Movies = Movies;
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        Movies = Movies;
     }
 
     private void OnForward(MouseEventArgs obj)

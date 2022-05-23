@@ -28,7 +28,7 @@ public class ToplistService : IToplistService
         var user = await _context.Set<Data.Domain.User>().SingleAsync(x => x.Id == userId);
         if (user.TopLists.All(x => x.MovieId != movie.Id))
         {
-            var index = user.TopLists.Count;
+            var index = user.TopLists.Count + 1;
             user.TopLists.Add(new UserToplists()
             {
                 MovieId = movie.Id,
@@ -49,7 +49,7 @@ public class ToplistService : IToplistService
         {
             var index = user.TopLists.First(x => x.MovieId == movie.Id).TopListIndex;
             user.TopLists.Remove(user.TopLists.Single(x => x.MovieId == movie.Id));
-            for (int i = index; i < user.TopLists.Count; i++)
+            for (int i = index+1; i <= user.TopLists.Count+1; i++)
             {
                 user.TopLists.Single(x => x.TopListIndex == i).TopListIndex--;
             }
@@ -89,7 +89,7 @@ public class ToplistService : IToplistService
         if (user.TopLists.Any(x => x.MovieId == movie.Id))
         {
             var index = user.TopLists.First(x => x.MovieId == movie.Id).TopListIndex;
-            if (index < user.TopLists.Count - 1)
+            if (index < user.TopLists.Count)
             {
                 int tempIndex = user.TopLists.Count+2;
                 int index1= user.TopLists.Single(x => x.TopListIndex == index + 1).TopListIndex;
