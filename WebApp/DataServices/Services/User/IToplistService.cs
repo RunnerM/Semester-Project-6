@@ -7,5 +7,5 @@ public interface IToplistService
     public Task<Data.Domain.User> RemoveFromToplistAsync(string externalMovieId, Guid userId);
     public Task<Data.Domain.User> MoveUpInToplistAsync(string externalMovieId, Guid userId);
     public Task<Data.Domain.User> MoveDownInToplistAsync(string externalMovieId, Guid userId);
-
+    public Task<bool> CheckIfMovieIsToplisted(string externalMovieId, Guid userId);
 }

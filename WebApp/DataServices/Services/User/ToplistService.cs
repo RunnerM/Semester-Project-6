@@ -120,4 +120,19 @@ public class ToplistService : IToplistService
 
         return await _context.Set<Movie>().SingleAsync(x => x.TMDBExternalId == externalMovieId);
     }
+
+    public async Task<bool> CheckIfMovieIsToplisted(string externalMovieId, Guid userId)
+    {
+        bool result = false;
+        var movie = await CheckIfMovieExists(externalMovieId);
+        var user = await _context.Set<Data.Domain.User>().SingleAsync(x => x.Id == userId);
+        if (user.TopLists.Any(x => x.MovieId == movie.Id))
+        {
+            result = true;
+
+            await _context.SaveChangesAsync();
+        }
+
+        return result;
+    }
 }

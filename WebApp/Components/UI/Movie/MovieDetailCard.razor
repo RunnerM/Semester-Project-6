@@ -69,24 +69,38 @@ else
             routeId = temp_routeId.Value;
         }
 
+        var task = _topListService.CheckIfMovieIsToplisted(_movie.Id.ToString(), _userService.GetUserByExtarnalIdAsync(routeId).GetAwaiter().GetResult().Id);
+        await task.WaitAsync(System.TimeSpan.FromSeconds(60)); //Better timeframe suggestion?
+        bool temp = task.Result;
+        OnToggle(temp);
+
     }
+
+
 
     private async void ManageToplist(bool value)
     {
+
         OnToggle(value);
+
+
         if (await _topListService.InitToplist(routeId))
         {
-            if (toggled)
+            
+            if (!toggled)
             {
                 await _topListService.RemoveFromToplistAsync(_movie.Id.ToString(), _userService.GetUserByExtarnalIdAsync(routeId).GetAwaiter().GetResult().Id);
                 TooltipText = "Remove from toplist";
-                
+
+                await InvokeAsync(StateHasChanged);
+
             }
             else
             {
                 
                 await _topListService.AddToToplistAsync(_movie.Id.ToString(), _userService.GetUserByExtarnalIdAsync(routeId).GetAwaiter().GetResult().Id);
                 TooltipText = "Add to toplist";
+                await InvokeAsync(StateHasChanged);
 
 
             }
