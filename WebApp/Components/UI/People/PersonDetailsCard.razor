@@ -10,7 +10,7 @@
 
     <MudStack Row="true" Style="padding: 20px">
         <MudStack AlignItems="AlignItems.Center">
-            <MudImage Src="@_person.ProfilePath" Height="300" Width="300" ObjectFit="ObjectFit.Contain" Style="border-radius: 150px; padding: 10px;"/>
+            <MudImage Src="@_person.ProfilePath" Height="300" Width="300" ObjectFit="@Fit" Style="border-radius: 150px; padding: 10px;"/>
             <MudText Typo="Typo.h4">@_person.Name</MudText>
         </MudStack>
         <MudStack Justify="Justify.SpaceEvenly">
@@ -48,11 +48,15 @@
     public int Id { get; set; }
 
     private TMDBPerson? _person;
+    public ObjectFit Fit { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         _person = await DataService.GetPersonByIdAsync(Id);
+        Fit = _person.ProfilePath == "https://i.imgur.com/uiH2cV6.png" ? ObjectFit.Contain : ObjectFit.Cover;
     }
 
+
+    
 
 }
