@@ -1,0 +1,122 @@
+﻿@page "/profile/{id}"
+
+@using System.Security.Claims
+@using WebApp.Shared;
+
+
+@inject NavigationManager NavigationManager
+@inject IHttpContextAccessor _httpContextAccessor
+@inject HttpClient Http
+
+<PageTitle>@GivenName Profile</PageTitle>
+
+<MudGrid Justify="Justify.FlexStart">
+    <MudItem xs=12 sm=12 md=12 lg=12 xl=12>
+        <MudText Align="Align.Center" Typo="Typo.h3">Your Profile</MudText>
+    </MudItem>
+    <MudItem xs=12 sm=12 md=12 lg=12 xl=12>
+        <MudPaper> 
+            
+            <MudDivider Style="margin-top:auto;" DividerType="DividerType.FullWidth"/>
+            <MudText  Style="margin-top:5px;" Typo="Typo.button">Profile Picture :</MudText>
+            <MudDivider Style="margin-top:5px;" DividerType="DividerType.FullWidth" Vertical="true"/>
+            <MudImage Style="margin:auto" Fluid=true Width="180" ObjectFit="ObjectFit.Cover" Src="@Avatar"></MudImage>
+            <MudDivider Style="margin:auto" DividerType="DividerType.FullWidth"/>
+             <MudDivider Style="margin-top:5px;" DividerType="DividerType.FullWidth"/>
+            <MudTextField @bind-Value="@GivenName" Label="First Name" ReadOnly="true" Variant="Variant.Outlined" />
+            <MudDivider Style="margin-top:5px;" DividerType="DividerType.FullWidth"/>
+            <MudTextField @bind-Value="@Surname" Label="Surname" ReadOnly="true" Variant="Variant.Outlined"/>
+            <MudDivider Style="margin-top:5px;" DividerType="DividerType.FullWidth"/>
+            <MudTextField @bind-Value="@user_mail" Label="Email" ReadOnly="true" Variant="Variant.Outlined"/>
+            <MudDivider Style="margin-top:5px;" DividerType="DividerType.FullWidth"/>
+        </MudPaper>
+    </MudItem>
+</MudGrid>
+
+@code {
+
+    [Parameter]
+    public string Id { get; set; }
+    private ClaimsPrincipal? User;
+    public string? GivenName { get; set; }
+    public string? Surname { get; set; }
+    public string? Avatar { get; set; }
+    public string?  routeId { get; set; }
+    public string? user_mail { get; set; }
+
+
+    protected override void OnInitialized()
+    {
+        try
+        {
+            //ToDo If context doesn't get user createIdentity and add it. 
+            //Try to get identity 
+            User = _httpContextAccessor.HttpContext.User;
+            // Try to get the GivenName
+            var givenName =
+                _httpContextAccessor.HttpContext.User
+                .FindFirst(ClaimTypes.GivenName);
+            if (givenName != null)
+            {
+                GivenName = givenName.Value;
+            }
+            else
+            {
+                GivenName = User.Identity.Name;
+            }
+            // Try to get the Surname
+            var surname =
+                _httpContextAccessor.HttpContext.User
+                .FindFirst(ClaimTypes.Surname);
+            if (surname != null)
+            {
+                Surname = surname.Value;
+            }
+            else
+            {
+                Surname = "";
+            }
+            // Try to get Avatar
+            var avatar =
+            _httpContextAccessor.HttpContext.User
+            .FindFirst("urn:google:image");
+            if (avatar != null)
+            {
+                Avatar = avatar.Value;
+            }
+            else
+            {
+                Avatar = "";
+            }
+            //Try to get UniqueIdentifier
+            var temp_routeId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier);
+            if (temp_routeId != null)
+            {
+                routeId = temp_routeId.Value.ToString();
+            }
+            else
+            {
+                routeId = User.Identity.Name;
+                //Case where can't fetch the nameIdentifier. get it from the creted identity. 
+            }
+            var usermail = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.Email);
+            if (usermail != null)
+            {
+                user_mail = usermail.Value.ToString();
+            }
+            else
+            {
+                user_mail = "404";
+                //Case where can't fetch the nameIdentifier. get it from the creted identity. 
+            }
+
+
+
+        }
+        catch { }
+    }
+
+
+	
+ 
+}

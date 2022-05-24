@@ -5,10 +5,12 @@ using MudBlazor.Services;
 using EFCore;
 //Login
 using System.Net.Http;
+using EFCore.Config;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using WebApp.DataServices.Services.TMDB;
+using WebApp.DataServices.Services.User;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -44,10 +46,13 @@ builder.Services.AddAuthentication().AddGoogle(options =>
     
     //This is to get the profile picture and name.
     options.ClaimActions.MapJsonKey("urn:google:profile", "link");
+    options.ClaimActions.MapJsonKey("urn:google:image", "picture");
 });
 
-
-
+if (builder.Environment.EnvironmentName=="Development")
+    Config.Init(ConfigVariables.Variables("Default"));
+if (builder.Environment.EnvironmentName=="Production")
+    Config.Init(ConfigVariables.Variables("Default"));
 
 var app = builder.Build();
 
@@ -79,5 +84,7 @@ static void AddServices(WebApplicationBuilder builder)
 {
     builder.Services.AddTransient<ITMDBClient,TMDBClient>();
     builder.Services.AddTransient<IDataService,DataService>();
+    builder.Services.AddTransient<IUserService,UserService>();
+    builder.Services.AddTransient<IToplistService,ToplistService>();
 }
     

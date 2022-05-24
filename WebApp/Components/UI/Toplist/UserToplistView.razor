@@ -1,0 +1,153 @@
+@using WebApp.DataServices.Services.TMDB
+@using WebApp.DataServices.Services.User
+@using Data.Domain
+@using EFCore.Utils
+@using System.Security.Claims
+@inject IDataService DataService
+@inject IUserService UserService
+@inject IToplistService ToplistService
+@inject IHttpContextAccessor HttpContextAccessor
+@inject NavigationManager NavigationManager
+
+@if (Items.Count == 0)
+{
+    <MudText Typo="Typo.h3" Style="padding: 40px">Your Top List is empty :(</MudText>
+}
+else
+{
+    <MudPaper Style="margin-bottom: 40px; margin-top: 30px" Elevation="3">
+        <MudTable AllowUnsorted="false" Items="@Items" Hover="true" Dense="false" Striped="true" Bordered="false" Loading="@_loading">
+            <ColGroup>
+                <col style="width: 20%;"/>
+                <col style="width: 20%;"/>
+                <col style="width: 20%;"/>
+                <col style="width: 10%;"/>
+                <col style="width: 10%;"/>
+                <col style="width: 10%;"/>
+                <col style="width: 10%;"/>
+            </ColGroup>
+            <ToolBarContent>
+                <MudText Typo="Typo.h4">My Top List</MudText>
+                <MudSpacer/>
+            </ToolBarContent>
+            <HeaderContent>
+                @* InitialDirection="SortDirection.Ascending" SortBy="new Func<Element, object>(x=>x.Name)" </MudTableSortLabel> *@
+                <MudTh>
+                    <MudTableSortLabel InitialDirection="SortDirection.Ascending" SortBy="new Func<Model, object>(x => x.Rank)">Rank</MudTableSortLabel>
+                </MudTh>
+                <MudTh>Title</MudTh>
+                <MudTh>Release Date</MudTh>
+                <MudTh>Move Up</MudTh>
+                <MudTh>Move Down</MudTh>
+                <MudTh>Remove</MudTh>
+                <MudTh>Go to</MudTh>
+            </HeaderContent>
+            <RowTemplate @onclick="() => onClick(@context)">
+                <MudTd DataLabel="@nameof(Model.Rank)">@context.Rank</MudTd>
+                <MudTd DataLabel="@nameof(Model.Title)">@context.Title</MudTd>
+                <MudTd DataLabel="@nameof(Model.ReleaseDate)">@context.ReleaseDate</MudTd>
+                <MudTd Title="up">
+                    <MudIconButton Size="@Size.Small" Icon="@Icons.Outlined.ArrowUpward" Color="Color.Primary" OnClick="@(async () => await OnUp(@context))"/>
+                </MudTd>
+                <MudTd DataLabel="down">
+                    <MudIconButton Size="@Size.Small" Icon="@Icons.Outlined.ArrowDownward" Color="Color.Primary" OnClick="@(async () => await OnDown(@context))"/>
+                </MudTd>
+                <MudTd DataLabel="down">
+                    <MudIconButton Size="@Size.Small" Icon="@Icons.Outlined.Delete" Color="Color.Primary" OnClick="@(async () => await OnDelete(@context))"/>
+                </MudTd>
+                <MudTd DataLabel="down">
+                    <MudIconButton Size="@Size.Small" Icon="@Icons.Outlined.Movie" Color="Color.Primary" OnClick="@(async () => await onClick(@context))"/>
+                </MudTd>
+            </RowTemplate>
+        </MudTable>
+    </MudPaper>
+}
+
+
+
+
+@code {
+    public string extarnalUserId { get; set; }
+
+    private User? User { get; set; }
+    private List<Model> Items { get; set; }
+    private bool _loading { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Items = new List<Model>();
+        extarnalUserId = HttpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+        if (!await ToplistService.InitToplist(extarnalUserId))
+            throw new Exception("user is not registered");
+        User = await UserService.GetUserByExtarnalIdAsync(extarnalUserId);
+        await RefreshItems();
+    }
+
+    private async Task RefreshItems()
+    {
+        Items = new List<Model>();
+        foreach (var topListItem in User.TopLists)
+        {
+            Items.Add(new(topListItem.TopListIndex, topListItem.Movie.Title, topListItem.Movie.ReleaseDate,
+                topListItem.Movie.TMDBExternalId));
+        }
+        await InvokeAsync(StateHasChanged);
+    }
+
+    public class Model
+    {
+        public Model(int rank, string title, string releaseDate, string extarnalId)
+        {
+            Rank = rank;
+            Title = title;
+            ReleaseDate = releaseDate;
+            ExtarnalId = extarnalId;
+        }
+
+        public int Rank { get; set; }
+        public string Title { get; set; }
+        public string ReleaseDate { get; set; }
+        public string ExtarnalId { get; set; }
+    }
+
+
+    private async Task OnDown(Model item)
+    {
+        if (!_loading)
+        {
+            _loading = true;
+            User = await ToplistService.MoveDownInToplistAsync(item.ExtarnalId, UserService.GetUserByExtarnalIdAsync(extarnalUserId).GetAwaiter().GetResult().Id);
+            await RefreshItems();
+        }
+        _loading = false;
+    }
+
+    private async Task OnUp(Model item)
+    {
+        if (!_loading)
+        {
+            _loading = true;
+            User = await ToplistService.MoveUpInToplistAsync(item.ExtarnalId, UserService.GetUserByExtarnalIdAsync(extarnalUserId).GetAwaiter().GetResult().Id);
+            await RefreshItems();
+        }
+        _loading = false;
+    }
+
+    private async Task OnDelete(Model item)
+    {
+        if (!_loading)
+        {
+            _loading = true;
+            User = await ToplistService.RemoveFromToplistAsync(item.ExtarnalId, UserService.GetUserByExtarnalIdAsync(extarnalUserId).GetAwaiter().GetResult().Id);
+            await RefreshItems();
+        }
+        _loading = false;
+    }
+
+
+    private async Task onClick(Model context)
+    {
+        NavigationManager.NavigateTo("/movie/" + context.ExtarnalId);
+    }
+
+}

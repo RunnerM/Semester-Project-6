@@ -1,10 +1,13 @@
 ﻿@inherits LayoutComponentBase
 
-<MudNavMenu  Bordered="true" Rounded="true" Color="Color.Surface" Class="mud-width-full">
-        <MudNavLink Href="/" Match="NavLinkMatch.Prefix" Icon="@Icons.Filled.Dashboard" IconColor="Color.Surface" >Home</MudNavLink>
-        <MudNavLink Href="movies" Match="NavLinkMatch.Prefix" Icon="@Icons.Filled.Movie" IconColor="Color.Surface">Movies</MudNavLink>
-        <MudNavLink Href="people" Match="NavLinkMatch.Prefix" Icon="@Icons.Filled.PersonOutline" IconColor="Color.Surface">People</MudNavLink>
+<MudNavMenu  Rounded="true"  Class="mud-width-full" Color="Color.Transparent"  >
+        <MudNavLink Href="home" Icon="@Icons.Filled.Dashboard" IconColor="Color.Default" >Home</MudNavLink>
+        <MudNavLink Href="movies" Icon="@Icons.Filled.Movie" IconColor="Color.Default">Movies</MudNavLink>
+        <MudNavLink Href="people" Icon="@Icons.Filled.PersonOutline" IconColor="Color.Default">People</MudNavLink>
 </MudNavMenu>
+
+@code {
+}
 
 
 

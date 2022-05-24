@@ -27,7 +27,7 @@ namespace WebApp.Pages
             {
                 string error = ex.Message;
             }
-            return LocalRedirect("/");
+            return LocalRedirect("/home");
         }
     }
 }

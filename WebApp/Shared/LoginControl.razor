@@ -1,37 +1,46 @@
 ﻿@using System.Security.Claims
 @using Microsoft.AspNetCore.Http
+@using WebApp.DataServices.Services.User
 @inject IHttpContextAccessor _httpContextAccessor
-@inject HttpClient Http
+@inject NavigationManager NavigationManager
+@inject ISnackbar Snackbar
+@inject IUserService UserService
+
 @if (User.Identity.Name != null)
 {
     <MudMenu FullWidth="true">
-       <ActivatorContent>
-          <MudChip Icon="@Icons.Material.Filled.Person" Color="Color.Primary"> @GivenName </MudChip>
+        <ActivatorContent>
+            <MudChip Icon="@Icons.Material.Filled.Person" Color="Color.Secondary"> @GivenName </MudChip>
         </ActivatorContent>
-            <ChildContent>
-                <MudMenuItem>Settings</MudMenuItem>
-                <MudMenuItem Href="/Logout" Target="_top">Log out</MudMenuItem>
-            </ChildContent>
-     </MudMenu>
+        <ChildContent>
+            <MudMenuItem @onclick="@OnClickProfile" Target="_top">Settings</MudMenuItem>
+            <MudMenuItem Href="/Logout" Target="_top">Log out</MudMenuItem>
+        </ChildContent>
+    </MudMenu>
 }
 else
 {
     <MudButton Href="/Login" Target="_top" Variant="Variant.Filled" StartIcon="@Icons.Custom.Brands.Google" Color="Color.Error" Size="Size.Large">Sign in</MudButton>
 }
+
 @code {
     private ClaimsPrincipal? User;
-    private string? GivenName;
-    protected override void OnInitialized()
+    public string? GivenName { get; set; }
+    public string? Surname { get; set; }
+    public string? Avatar { get; set; }
+    public string? routeId { get; set; }
+
+    protected override async Task OnInitializedAsync()
     {
-        base.OnInitialized();
         try
         {
-            // Set the user to determine if they are logged in
+    //ToDo If context doesn't get user createIdentity and add it. 
+    //Try to get identity 
             User = _httpContextAccessor.HttpContext.User;
-            // Try to get the GivenName
+    // Try to get the GivenName
             var givenName =
                 _httpContextAccessor.HttpContext.User
-                .FindFirst(ClaimTypes.GivenName);
+                    .FindFirst(ClaimTypes.GivenName);
             if (givenName != null)
             {
                 GivenName = givenName.Value;
@@ -40,7 +49,42 @@ else
             {
                 GivenName = User.Identity.Name;
             }
+    //Try to get UniqueIdentifier
+            var temp_routeId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier);
+            if (temp_routeId != null)
+            {
+                routeId = temp_routeId.Value.ToString();
+            }
+            else
+            {
+                routeId = User.Identity.Name;
+    //Case where can't fetch the nameIdentifier. get it from the creted identity. 
+            }
         }
-        catch { }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.Message);
+        }
+        if (User.Identity.IsAuthenticated && ! await UserService.DoesUserExistAsync(User.FindFirst(ClaimTypes.Email).Value))
+        {
+            await UserService.CreateUserAsync(new IUserService.CreateUserRequest(User.FindFirst(ClaimTypes.Email).Value, User.FindFirst(ClaimTypes.Name).Value, User.FindFirst(ClaimTypes.NameIdentifier).Value));
+        }
+
+        Snackbar.Configuration.PositionClass = Defaults.Classes.Position.BottomRight;
+        if (GivenName == null)
+        {
+            Snackbar.Add("Welcome Guest.  Care to join?", Severity.Info, config => { config.HideIcon = true; });
+        }
+        else
+        {
+            Snackbar.Add("Welcome back " + GivenName, Severity.Success, config => { config.HideIcon = true; });
+        }
     }
+
+
+    private void OnClickProfile()
+    {
+        NavigationManager.NavigateTo("/profile/" + routeId);
+    }
+
 }

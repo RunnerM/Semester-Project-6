@@ -6,7 +6,7 @@
 @inject NavigationManager NavigationManager
 
 
-<MudGrid>
+<MudGrid Sstyle="user-select:none;">
     
 @if (_movies == null)
 {
@@ -16,27 +16,35 @@
 }
 else
 {
-
-<MudItem xs="12" md="12" lg="12"  Class="d-flex flex-column mud-width-full ">
-
-    <MudCarousel Class="mud-width-full" style="height:650px" ItemsSource="@currentMovies" @bind-SelectedIndex="currentIndex"  ShowArrows="true" ShowBullets="true" AutoCycle="false">
-	    <ItemTemplate>
-            <div class="d-flex flex-column flex-column justify-center" style="height:100%">
-            <MovieCarouselComponent  Title="@context.Title" PictureSrc="@context.BackdropPath" Id="@context.Id.ToString()"/>
+<MudItem xs="12" md="12" lg="12">
+    <MudCarousel Class="d-flex flex-column mud-width-full rounded-lg" style="height:40.625rem;user-select:none;" ItemsSource="@currentMovies" @bind-SelectedIndex="currentIndex"  ShowArrows="true" ShowBullets="true" AutoCycle="true">
+        <BulletTemplate Context="selected">
+        <div Class="mud-button-root mud-icon-button mud-icon-button-color-inherit mud-ripple mud-ripple-icon">
+            <span class="mud-icon-button-label">
+                <MudIcon Icon="@(selected ? Icons.Material.Filled.CheckCircle : Icons.Material.Filled.Circle)" Style="@($"color:{Colors.Purple.Lighten5};")" />
+            </span>
+        </div>
+        </BulletTemplate>
+        <PreviousButtonTemplate>
+            <div Class="mud-button-root mud-icon-button mud-icon-button-color-inherit mud-ripple mud-ripple-icon">
+                <span class="mud-icon-button-label">
+                    <MudIcon Class="mud-ripple mud-ripple-icon mud-icon-button-size-medium" Icon="@Icons.Material.Filled.SkipPrevious" Size="Size.Large" Style="@($"color:{Colors.Purple.Lighten5};")" />
+                </span>
             </div>
+        </PreviousButtonTemplate>
+	    <ItemTemplate>
+            <MovieCarouselComponent  Title="@context.Title" Overview="@context.Overview" BackdropSrc="@context.BackdropPath" CoverSrc="@context.PosterPath"  Id="@context.Id.ToString()"/>
 	    </ItemTemplate>
-        
+        <NextButtonTemplate>
+            <div Class="mud-button-root mud-icon-button mud-icon-button-color-inherit mud-ripple mud-ripple-icon">
+                <span class="mud-icon-button-label">
+                    <MudIcon Class="mud-ripple mud-ripple-icon mud-icon-button-size-medium" Icon="@Icons.Material.Filled.SkipNext" Size="Size.Large" Style="@($"color:{Colors.Purple.Lighten5};")" />
+                </span>
+            </div>
+        </NextButtonTemplate>    
     </MudCarousel>
-  
 </MudItem>
-
 }
-
-
-
-
-<h3>MovieCarousel</h3>
-
 </MudGrid>
 @code {
 
@@ -47,7 +55,19 @@ else
     protected override async Task OnInitializedAsync()
     {
         _movies = await DataService.GetTrendingMovies();
-        currentMovies = _movies.Take(4).ToList();
+        for (int i = 0; i < _movies.ToList().Count(); i++)
+        {
+            
+            if(_movies.ElementAt(i).Title.Count() > 40)
+            {
+                _movies.RemoveAt(i);
+            } else if(_movies.ElementAt(i).Overview.Count() > 299)
+            {
+                _movies.RemoveAt(i);
+            }
+
+        }
+        currentMovies = _movies.Take(13).ToList();
         currentIndex = 0;
     }
 }

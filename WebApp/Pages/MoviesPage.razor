@@ -10,13 +10,40 @@
 }
 <MovieSlider Category="Top Rated Movies" Movies="@_topRatedMovies"/>
 
+@if (_NowPlayingMovies==null)
+{
+    return;
+}
+<MovieSlider Category="Now Playing" Movies="@_NowPlayingMovies"/>
+
+@if (_UpcomingMovies==null)
+{
+    return;
+}
+<MovieSlider Category="Upcoming" Movies="@_UpcomingMovies"/>
+
+@if (_PopularMovies==null)
+{
+    return;
+}
+<MovieSlider Category="Popular now" Movies="@_PopularMovies"/>
+
+
+
+
 
 
 @code {
     private List<TMDBMovie> _topRatedMovies{ get; set; }
+    private List<TMDBMovie> _NowPlayingMovies{ get; set; }
+    private List<TMDBMovie> _PopularMovies{ get; set; }
+    private List<TMDBMovie> _UpcomingMovies{ get; set; }
 
     protected override async Task OnInitializedAsync()    {
         _topRatedMovies = await DataService.GetTopRatedMoviesAsync();
+        _NowPlayingMovies = await DataService.GetNowPlayingMovies();
+        _PopularMovies = await DataService.GetPopularMovies();
+        _UpcomingMovies = await DataService.GetUpcomingMovies();
     }
     
 

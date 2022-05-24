@@ -10,15 +10,35 @@
 
     <MudStack Row="true" Style="padding: 20px">
         <MudStack AlignItems="AlignItems.Center">
-            <MudImage Src="@_person.ProfilePath" Height="300" Width="300" ObjectFit="ObjectFit.Cover" Style="border-radius: 150px; padding: 10px;"/>
+            <MudImage Src="@_person.ProfilePath" Height="300" Width="300" ObjectFit="ObjectFit.Contain" Style="border-radius: 150px; padding: 10px;"/>
             <MudText Typo="Typo.h4">@_person.Name</MudText>
         </MudStack>
         <MudStack Justify="Justify.SpaceEvenly">
-            <MudText Typo="Typo.h5">Biogarphy: @_person.Biography</MudText>
-            <MudText Typo="Typo.h5">Popularity: @_person.Popularity</MudText>
-            <MudText Typo="Typo.h5">Known: @_person.KnownForDepartment</MudText>
+            <MudStack Row AlignItems="AlignItems.Baseline">
+                <MudText Typo="Typo.h4">Biogarphy:</MudText>
+                @if (_person.Biography.Length > 250)
+                {
+                    <MudText Typo="Typo.h5">@(_person.Biography.Substring(0, 250))...</MudText>
+                }
+                else
+                {
+                    <MudText Typo="Typo.h5">@_person.Biography</MudText>
+                }
+            </MudStack >
+            <MudStack Row AlignItems="AlignItems.Baseline">
+                <MudText Typo="Typo.h4">Popularity:</MudText>
+                <MudText Typo="Typo.h5">@_person.Popularity</MudText>
+            </MudStack>
+            <MudStack Row AlignItems="AlignItems.Baseline">
+                <MudText Typo="Typo.h4">Known for:</MudText>
+                <MudText Typo="Typo.h5">@_person.KnownForDepartment</MudText>
+            </MudStack>
+            <MudStack Row AlignItems="AlignItems.Baseline">
+                <MudText Typo="Typo.h4">Birthday:</MudText>
+                <MudText Typo="Typo.h5">@_person.Birthday</MudText>
+            </MudStack>
         </MudStack>
-        
+
     </MudStack>
 </MudPaper>
 

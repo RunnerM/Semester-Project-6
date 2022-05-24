@@ -3,7 +3,7 @@
 @inject IDataService DataService
 
 
-<MudText Color="Color.Default" Typo="Typo.h5">@Category</MudText>
+<MudText Style="font-size:30px;user-select:none;"  Color="Color.Default" Typo="Typo.button">@Category</MudText>
 <MudDivider/>
 
 @if (People == null)
@@ -15,7 +15,7 @@ else
     <div class="d-flex flex-row justify-space-around">
         <MudStack>
             <MudSpacer/>
-            <MudIconButton Icon="@Icons.Material.Filled.ArrowBack"  OnClick="OnBackward"></MudIconButton>
+            <MudIconButton Icon="@Icons.Material.Filled.ArrowBack" Color="Color.Primary" OnClick="OnBackward"></MudIconButton>
             <MudSpacer/>
         </MudStack>
         @foreach (var person in activePeople)
@@ -24,7 +24,7 @@ else
         }
         <MudStack>
             <MudSpacer/>
-            <MudIconButton Icon="@Icons.Material.Filled.ArrowForward"  OnClick="OnForward"></MudIconButton>
+            <MudIconButton Icon="@Icons.Material.Filled.ArrowForward" Color="Color.Primary"  OnClick="OnForward"></MudIconButton>
             <MudSpacer/>
         </MudStack>
     </div>

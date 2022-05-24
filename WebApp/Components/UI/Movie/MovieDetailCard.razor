@@ -1,6 +1,12 @@
 @using global::Data.TMDBDomain
+@using System.Security.Claims
 @using WebApp.DataServices.Services.TMDB
+@using WebApp.DataServices.Services.User
 @inject IDataService DataService 
+@inject IToplistService _topListService
+@inject IUserService _userService
+@inject IHttpContextAccessor _httpContextAccessor
+@inject HttpClient Http
 
 @if (_movie == null)
 {
@@ -8,11 +14,33 @@
 }
 else
 {
-    <MudText Typo="Typo.h3" Color="Color.Default" Style="padding-bottom: 10px">@_movie.Title</MudText>
-    <MudDivider  Vertical="true" Light="true"/>
+    <MudStack Row>
+        <MudText Typo="Typo.h3" Color="Color.Default" Style="padding-bottom: 10px">@_movie.Title</MudText>
+    <MudSpacer/>
+    <AuthorizeView>
+        <Authorized>
+            @if (isRunning)
+            {
+                <MudTooltip Text="Loading..">
+                <MudProgressCircular Color="Color.Primary" Size="Size.Large" Indeterminate="true" />
+                </MudTooltip>
+            }
+            else
+            {
+                <MudTooltip Text="@TooltipText">
+                    <MudToggleIconButton Icon="@Icons.Material.Filled.Favorite" Color="Color.Default" Size="Size.Large" ToggledSize="Size.Large" ToggledIcon="@Icons.Material.Filled.Favorite" ToggledColor="Color.Error" ToggledChanged="@ManageToplist" Toggled="@toggled"></MudToggleIconButton>
+                </MudTooltip>
+            }
+            
+        </Authorized>
+    </AuthorizeView>
+
+    </MudStack>
+    <MudDivider Vertical="true" Light="true"/>
     <MudPaper Elevation="3">
         <MudStack Row="false">
-            <MudImage Src="@_movie.BackdropPath" ObjectFit="ObjectFit.Cover" Height="400" Style="border-radius: 5px"></MudImage>
+            <MudImage Src="@_movie.BackdropPath" ObjectFit="@Fit"  Height="400" Style="border-radius: 5px"></MudImage>
+
             <MudStack Row="true">
                 <MudText Typo="Typo.h4" Color="Color.Default" Style="padding-left: 10px">Release Date:</MudText>
                 <MudText Typo="Typo.h4" Color="Color.Default" Style="padding-right:8px">@_movie.ReleaseDate</MudText>
@@ -34,13 +62,68 @@ else
 
 @code {
     private TMDBMovie _movie;
+    private ClaimsPrincipal? User;
+    public string? routeId { get; set; }
+    public bool toggled { get; set; }
+    public string TooltipText { get; set; } = "Add to toplist";
+    public bool isRunning { get; set; } = false;
+    public ObjectFit Fit { get; set; }
 
     [Parameter]
     public int movieId { get; set; }
 
+    public void OnToggle(bool value)
+    {
+        toggled = value;
+    }
+
     protected override async Task OnInitializedAsync()
     {
         _movie = await DataService.GetMovieByIdAsync(movieId);
+        Fit = _movie.BackdropPath == "https://i.imgur.com/Lx8aw35.png" ? ObjectFit.Contain : ObjectFit.Cover;
+
+        var flag =  _httpContextAccessor.HttpContext.User.Identity.IsAuthenticated;
+        
+        if (flag)
+        {
+            var temp_routeId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier);
+        
+            if (temp_routeId != null)
+            {
+                routeId = temp_routeId.Value;
+            }
+
+            var task = await _topListService.CheckIfMovieIsToplisted(_movie.Id.ToString(), _userService.GetUserByExtarnalIdAsync(routeId).GetAwaiter().GetResult().Id);
+            OnToggle(task);
+
+            TooltipText = !task ? "Add to toplist" : "Remove from toplist";
+        }
     }
+
+
+    private async void ManageToplist(bool value)
+    {
+        OnToggle(value);
+        isRunning = true;
+        if (await _topListService.InitToplist(routeId))
+        {
+            if (!toggled)
+            {
+                await _topListService.RemoveFromToplistAsync(_movie.Id.ToString(), _userService.GetUserByExtarnalIdAsync(routeId).GetAwaiter().GetResult().Id);
+                TooltipText = "Add to toplist";
+                
+            }
+            else
+            {
+                await _topListService.AddToToplistAsync(_movie.Id.ToString(), _userService.GetUserByExtarnalIdAsync(routeId).GetAwaiter().GetResult().Id);
+                TooltipText = "Remove from toplist";
+            }
+        }
+        isRunning = false;
+        await InvokeAsync(StateHasChanged);
+    }
+
+
+    
 
 }

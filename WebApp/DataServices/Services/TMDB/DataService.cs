@@ -9,8 +9,10 @@ public class DataService : IDataService
     private readonly Context _context;
 
     private const string DummyImageUrl =
-        "https://e7.pngegg.com/pngimages/923/367/png-clipart-man-white-and-black-with-eyeglasses-art-beard-art-face-logo-beard-face-people.png";
+        "https://i.imgur.com/uiH2cV6.png";
 
+    public const string DummyImageMovieUrl = "https://i.imgur.com/Lx8aw35.png";
+        
     private const string ImageBaseUrl = "https://image.tmdb.org/t/p/original/";
 
 
@@ -44,10 +46,11 @@ public class DataService : IDataService
     public async Task<TMDBMovie> GetMovieByIdAsync(int MovieId)
     {
         var movie = await _tmdbClient.GetMovieByIdAsync(MovieId);
-        movie.PosterPath = ImageBaseUrl + movie.PosterPath;
-        movie.BackdropPath = ImageBaseUrl + movie.BackdropPath;
+        FixMovieImagePaths(movie);
         return movie;
     }
+
+    
 
     public async Task<TMDBPerson> GetPersonByIdAsync(int PersonId)
     {
@@ -62,34 +65,40 @@ public class DataService : IDataService
     public async Task<TMDBCast> GetCastByMovieIdAsync(int MovieId)
     {
         var cast = await _tmdbClient.GetCastByMovieIdAsync(MovieId);
+        
         cast.cast = cast.cast.DistinctBy(x => x.Name).ToList();
         cast.crew = cast.crew.DistinctBy(x => x.Name).ToList();
-        cast.cast.ForEach(x =>
+        cast.directors = new List<TMDBPerson>().ToList();
+       
+        cast.cast.ToList().ForEach(x =>
         {
             if (x.ProfilePath == null)
                 x.ProfilePath = DummyImageUrl;
             else
                 x.ProfilePath = ImageBaseUrl + x.ProfilePath;
         });
-        cast.crew.ForEach(x =>
+        cast.crew.ToList().ForEach(x =>
         {
             if (x.ProfilePath == null)
                 x.ProfilePath = DummyImageUrl;
             else
                 x.ProfilePath = ImageBaseUrl + x.ProfilePath;
+
+            if (x.Job.Contains("Director"))
+            {
+                cast.directors.Add(x);
+                cast.crew.Remove(x);
+            }
         });
 
+        cast.directors = cast.directors.DistinctBy(x => x.Name).ToList();
         return cast;
     }
 
     public async Task<List<TMDBMovie>> SearchMovieByTermAsync(string SearchTerm)
     {
         var movies = await _tmdbClient.SearchMovieByTermAsync(SearchTerm);
-        movies.Results.ForEach(x =>
-        {
-            x.PosterPath = ImageBaseUrl + x.PosterPath;
-            x.BackdropPath = ImageBaseUrl + x.BackdropPath;
-        });
+        movies.Results.ForEach(FixMovieImagePaths);
         return movies.Results;
     }
 
@@ -105,6 +114,7 @@ public class DataService : IDataService
         });
         return people.Results;
     }
+
     public async Task<List<TMDBMovie>> GetTrendingMovies()
     {
         var movies = await _tmdbClient.GetTrendingWeeklyMovies();
@@ -113,6 +123,49 @@ public class DataService : IDataService
             movie.PosterPath = "https://image.tmdb.org/t/p/original/" + movie.PosterPath;
             movie.BackdropPath = "https://image.tmdb.org/t/p/original/" + movie.BackdropPath;
         }
+
         return movies;
+    }
+
+    public async Task<List<TMDBMovie>> GetCreditsForPersonAsync(int personId)
+    {
+        var m = await _tmdbClient.GetCreditsForPersonAsync(personId);
+        m.ForEach(FixMovieImagePaths);
+        return m;
+    }
+
+
+    public async Task<List<TMDBMovie>> GetNowPlayingMovies() 
+    {
+        var movies = await _tmdbClient.GetNowPlayingMoviesAsync();
+        foreach (var movie in movies)
+            movie.PosterPath = ImageBaseUrl + movie.PosterPath;
+        return movies;
+    }
+    public async Task<List<TMDBMovie>> GetPopularMovies()
+    {
+        var movies = await _tmdbClient.GetPopularMoviesAsync();
+        foreach (var movie in movies)
+            movie.PosterPath = ImageBaseUrl + movie.PosterPath;
+        return movies;
+    } 
+    public async Task<List<TMDBMovie>> GetUpcomingMovies()
+    {
+    var movies = await _tmdbClient.GetUpcomingMoviesAsync();
+    foreach (var movie in movies)
+        movie.PosterPath = ImageBaseUrl + movie.PosterPath;
+    return movies;
+    }
+    
+    private static void FixMovieImagePaths(TMDBMovie movie)
+    {
+        if (!string.IsNullOrEmpty(movie.BackdropPath))
+            movie.BackdropPath = ImageBaseUrl + movie.BackdropPath;
+        else
+            movie.BackdropPath = DummyImageMovieUrl;
+        if (!string.IsNullOrEmpty(movie.PosterPath))
+            movie.PosterPath = ImageBaseUrl + movie.PosterPath;
+        else
+            movie.PosterPath = DummyImageMovieUrl;
     }
 }

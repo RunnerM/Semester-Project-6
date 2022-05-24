@@ -16,7 +16,7 @@ namespace WebApp.Pages
     [AllowAnonymous]
     public class LoginModel : PageModel
     {
-        public IActionResult OnGetAsync(string returnUrl = null)
+        public IActionResult OnGetAsync(string returnUrl = "https://staging-movie-platform-sep6.herokuapp.com/signin-google")
         {
             string provider = "Google";
             // Request a redirect to the external login provider.
@@ -30,7 +30,7 @@ namespace WebApp.Pages
         }
         
         public async Task<IActionResult> OnGetCallbackAsync(
-            string returnUrl = null, string remoteError = null)
+            string returnUrl = "https://staging-movie-platform-sep6.herokuapp.com/signin-google", string remoteError = null)
         {
             // Get the information about the user from the external login provider
             var GoogleUser = this.User.Identities.FirstOrDefault();
@@ -42,13 +42,7 @@ namespace WebApp.Pages
                     
                     RedirectUri = "https://" + Request.Host.Value 
                 };
-
-
-                
-
                HttpContext.Response.Redirect("https://" + Request.Host.Value);
-             
-
                 try {
                     
                     await HttpContext.SignInAsync(
@@ -62,7 +56,7 @@ namespace WebApp.Pages
                 }
                 
             }
-            return LocalRedirect("/");
+            return LocalRedirect("/home");
         }
 
 
