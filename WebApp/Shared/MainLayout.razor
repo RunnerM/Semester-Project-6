@@ -35,14 +35,16 @@
         <MudSpacer/>
         <MudStack Row>
             <MudSpacer/>
+            <MudTooltip Text="@DrawerTooltipText" Placement="Placement.Right">
             <MudToggleIconButton Icon="@Icons.Material.Filled.ArrowRight" ToggledIcon="@Icons.Material.Filled.ArrowLeft" Color="Color.Default" Edge="Edge.Start" ToggledChanged="@ToggleDrawer"/>
+            </MudTooltip>
         </MudStack>
     </MudDrawer>
     <MudMainContent Class="pt-16 px-16">
         <MudContainer Class="mt-6">
             @Body
             <MudScrollToTop>
-                <MudFab Color="Color.Tertiary" Icon="@Icons.Filled.ArrowCircleUp" />
+                <MudFab Color="Color.Tertiary" Icon="@Icons.Filled.ArrowUpward" />
             </MudScrollToTop>
         </MudContainer>
     </MudMainContent>
@@ -59,6 +61,7 @@
     public bool _isLightMode = true;
     public string TitleText { get; set; }
     public string DarkModeText { get; set; } = "Dark Mode";
+    public string DrawerTooltipText { get; set; } = "Expand";
 
 
     private void ToggleTheme()
@@ -101,7 +104,10 @@
     {
         _open = !_open;
         TitleText = _open ? "AdonisPrime" : "";
+        DrawerTooltipText = _open ? "Collapse" : "Expand";
     }
 
+
+    
 
 }

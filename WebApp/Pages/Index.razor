@@ -3,15 +3,11 @@
 @using WebApp.DataServices.Services.TMDB
 @inject IDataService DataService
 @inject IHttpContextAccessor _httpContextAccessor
-
-
 @page "/home"
 @attribute [Authorize]
 
 <PageTitle>Home</PageTitle>
-
 <MovieCarousel/>
-
 
 <AuthorizeView>
 	<Authorized>
@@ -21,17 +17,9 @@
     </NotAuthorized>
 </AuthorizeView>
 
-
-
-
 @code {
     private ClaimsPrincipal? User;
     private string? GivenName;
-    private List<TMDBMovie> _topRatedMovies{ get; set; }
-    private List<TMDBPerson> PopularPeople { get; set; }
-    private List<TMDBMovie> _NowPlayingMovies{ get; set; }
-    private List<TMDBMovie> _PopularMovies{ get; set; }
-    private List<TMDBMovie> _UpcomingMovies{ get; set; }
 
     protected override void OnInitialized()
     {
@@ -55,17 +43,6 @@
 
         }
         catch { }
-
-
     }
-
-    protected override async Task OnInitializedAsync()    {
-        _topRatedMovies = await DataService.GetTopRatedMoviesAsync();
-        PopularPeople = await DataService.GetPopularPersonalAsync();
-        _NowPlayingMovies = await DataService.GetNowPlayingMovies();
-        _PopularMovies = await DataService.GetPopularMovies();
-        _UpcomingMovies = await DataService.GetUpcomingMovies();
-    }
-
     
 }
