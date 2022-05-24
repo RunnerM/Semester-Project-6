@@ -1,48 +1,11 @@
-@using System.Security.Claims
-@using global::Data.TMDBDomain
-@using WebApp.DataServices.Services.TMDB
-@inject IDataService DataService
-@inject IHttpContextAccessor _httpContextAccessor
-@page "/home"
-@attribute [Authorize]
-
-<PageTitle>Home</PageTitle>
-<MovieCarousel/>
-
-<AuthorizeView>
-	<Authorized>
-        <UserToplistView/>
-	</Authorized>
-    <NotAuthorized>
-    </NotAuthorized>
-</AuthorizeView>
+@page "/"
+@inject NavigationManager NavigationManager
+<h3>redirecting...</h3>
 
 @code {
-    private ClaimsPrincipal? User;
-    private string? GivenName;
-
     protected override void OnInitialized()
     {
-        base.OnInitialized();
-        try
-        {
-            // Set the user to determine if they are logged in
-            User = _httpContextAccessor.HttpContext.User;
-            // Try to get the GivenName
-            var givenName =
-                _httpContextAccessor.HttpContext.User
-                .FindFirst(ClaimTypes.GivenName);
-            if (givenName != null)
-            {
-                GivenName = givenName.Value;
-            }
-            else
-            {
-                GivenName = User.Identity.Name;
-            }
-
-        }
-        catch { }
+        NavigationManager.NavigateTo("/home");
     }
-    
+
 }
