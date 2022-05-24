@@ -6,26 +6,37 @@
 
 <MudText Typo="Typo.h4">Results:</MudText>
 
-@if(MovieResults==null&& PersonResults == null){
-    return;
-}else if (MovieResults.Count==0 && PersonResults.Count>0)
+@if (MovieResults == null && PersonResults == null)
 {
-    <PersonSlider Category="Person" People="PersonResults"></PersonSlider>
-}else if (PersonResults.Count==0 && MovieResults.Count>0)
+    return;
+}
+@if (MovieResults.Count == 0 && PersonResults.Count == 0)
+{
+    <MudText Typo="Typo.h6">No results :(</MudText>
+    return;
+}
+else if (MovieResults.Count == 0 && PersonResults.Count > 0)
+{
+    <PersonSlider Category="Person" People="@PersonResults"></PersonSlider>
+}
+else if (PersonResults.Count == 0 && MovieResults.Count > 0)
 {
     <MovieSlider Category="Movies" Movies="@MovieResults"/>
-}else
+}
+else
 {
-   <MovieSlider Category="Movies" Movies="@MovieResults"/>
-   <PersonSlider Category="Person" People="PersonResults"></PersonSlider> 
+    <MovieSlider Category="Movies" Movies="@MovieResults"/>
+    <PersonSlider Category="Person" People="@PersonResults"></PersonSlider>
 }
 
 
 
+
 @code {
+
     [Parameter]
     public string SearchTerm { get; set; }
-    
+
     private List<TMDBMovie> MovieResults { get; set; }
     private List<TMDBPerson> PersonResults { get; set; }
 
@@ -35,6 +46,6 @@
         PersonResults = await DataService.SearchPeopleByTermAsync(SearchTerm);
         StateHasChanged();
     }
-    
+
 
 }

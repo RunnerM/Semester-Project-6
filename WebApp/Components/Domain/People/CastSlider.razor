@@ -14,7 +14,7 @@ else
     <div class="d-flex flex-row justify-space-around" style="padding: 10px">
         <MudStack>
             <MudSpacer/>
-            <MudIconButton Icon="@Icons.Material.Filled.ArrowBack" OnClick="OnBackward"></MudIconButton>
+            <MudIconButton Icon="@Icons.Material.Filled.ArrowBack" OnClick="OnBackward" Color="Color.Primary"></MudIconButton>
             <MudSpacer/>
         </MudStack>
         @foreach (var person in _activePeople)
@@ -23,7 +23,7 @@ else
         }
         <MudStack>
             <MudSpacer/>
-            <MudIconButton Icon="@Icons.Material.Filled.ArrowForward" OnClick="OnForward"></MudIconButton>
+            <MudIconButton Icon="@Icons.Material.Filled.ArrowForward" OnClick="OnForward" Color="Color.Primary"></MudIconButton>
             <MudSpacer/>
         </MudStack>
     </div>
