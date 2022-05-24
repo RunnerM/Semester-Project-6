@@ -11,6 +11,9 @@ public class DataService : IDataService
     private const string DummyImageUrl =
         "https://e7.pngegg.com/pngimages/923/367/png-clipart-man-white-and-black-with-eyeglasses-art-beard-art-face-logo-beard-face-people.png";
 
+    private const string DummyImageMovieUrl =
+        "https://www.pngfind.com/pngs/m/2-24732_question-mark-maze-labyrinth-information-maze-in-shape.png";
+        
     private const string ImageBaseUrl = "https://image.tmdb.org/t/p/original/";
 
 
@@ -44,8 +47,18 @@ public class DataService : IDataService
     public async Task<TMDBMovie> GetMovieByIdAsync(int MovieId)
     {
         var movie = await _tmdbClient.GetMovieByIdAsync(MovieId);
-        movie.PosterPath = ImageBaseUrl + movie.PosterPath;
-        movie.BackdropPath = ImageBaseUrl + movie.BackdropPath;
+        if (movie.PosterPath != null || movie.BackdropPath != null)
+        {
+            movie.PosterPath = ImageBaseUrl + movie.PosterPath;
+            movie.BackdropPath = ImageBaseUrl + movie.BackdropPath;
+        }
+        else
+        {
+            movie.PosterPath = DummyImageMovieUrl;
+
+            movie.BackdropPath = DummyImageMovieUrl;
+        }
+
         return movie;
     }
 
@@ -97,8 +110,18 @@ public class DataService : IDataService
         var movies = await _tmdbClient.SearchMovieByTermAsync(SearchTerm);
         movies.Results.ForEach(x =>
         {
-            x.PosterPath = ImageBaseUrl + x.PosterPath;
-            x.BackdropPath = ImageBaseUrl + x.BackdropPath;
+            if (x.PosterPath != null || x.BackdropPath!=null)
+            {
+                x.PosterPath = ImageBaseUrl + x.PosterPath;
+                x.BackdropPath = ImageBaseUrl + x.BackdropPath;
+            }
+            else
+            {
+                x.PosterPath = DummyImageMovieUrl;
+                x.BackdropPath = DummyImageUrl;
+            }
+            
+            
         });
         return movies.Results;
     }
