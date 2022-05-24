@@ -47,20 +47,11 @@ public class DataService : IDataService
     public async Task<TMDBMovie> GetMovieByIdAsync(int MovieId)
     {
         var movie = await _tmdbClient.GetMovieByIdAsync(MovieId);
-        if (movie.PosterPath != null || movie.BackdropPath != null)
-        {
-            movie.PosterPath = ImageBaseUrl + movie.PosterPath;
-            movie.BackdropPath = ImageBaseUrl + movie.BackdropPath;
-        }
-        else
-        {
-            movie.PosterPath = DummyImageMovieUrl;
-
-            movie.BackdropPath = DummyImageMovieUrl;
-        }
-
+        FixMovieImagePaths(movie);
         return movie;
     }
+
+    
 
     public async Task<TMDBPerson> GetPersonByIdAsync(int PersonId)
     {
@@ -108,21 +99,7 @@ public class DataService : IDataService
     public async Task<List<TMDBMovie>> SearchMovieByTermAsync(string SearchTerm)
     {
         var movies = await _tmdbClient.SearchMovieByTermAsync(SearchTerm);
-        movies.Results.ForEach(x =>
-        {
-            if (x.PosterPath != null || x.BackdropPath!=null)
-            {
-                x.PosterPath = ImageBaseUrl + x.PosterPath;
-                x.BackdropPath = ImageBaseUrl + x.BackdropPath;
-            }
-            else
-            {
-                x.PosterPath = DummyImageMovieUrl;
-                x.BackdropPath = DummyImageUrl;
-            }
-            
-            
-        });
+        movies.Results.ForEach(FixMovieImagePaths);
         return movies.Results;
     }
 
@@ -184,5 +161,17 @@ public class DataService : IDataService
     foreach (var movie in movies)
         movie.PosterPath = ImageBaseUrl + movie.PosterPath;
     return movies;
-    } 
+    }
+    
+    private static void FixMovieImagePaths(TMDBMovie movie)
+    {
+        if (!string.IsNullOrEmpty(movie.BackdropPath))
+            movie.BackdropPath = ImageBaseUrl + movie.BackdropPath;
+        else
+            movie.BackdropPath = DummyImageMovieUrl;
+        if (!string.IsNullOrEmpty(movie.PosterPath))
+            movie.PosterPath = ImageBaseUrl + movie.PosterPath;
+        else
+            movie.PosterPath = DummyImageMovieUrl;
+    }
 }
