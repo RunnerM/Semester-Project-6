@@ -9,10 +9,9 @@ public class DataService : IDataService
     private readonly Context _context;
 
     private const string DummyImageUrl =
-        "https://e7.pngegg.com/pngimages/923/367/png-clipart-man-white-and-black-with-eyeglasses-art-beard-art-face-logo-beard-face-people.png";
+        "https://i.imgur.com/uiH2cV6.png";
 
-    private const string DummyImageMovieUrl =
-        "https://www.pngfind.com/pngs/m/2-24732_question-mark-maze-labyrinth-information-maze-in-shape.png";
+    public const string DummyImageMovieUrl = "https://i.imgur.com/Lx8aw35.png";
         
     private const string ImageBaseUrl = "https://image.tmdb.org/t/p/original/";
 
@@ -131,12 +130,7 @@ public class DataService : IDataService
     public async Task<List<TMDBMovie>> GetCreditsForPersonAsync(int personId)
     {
         var m = await _tmdbClient.GetCreditsForPersonAsync(personId);
-        m.ForEach(x =>
-            {
-                x.PosterPath = ImageBaseUrl + x.PosterPath;
-                x.BackdropPath = ImageBaseUrl + x.BackdropPath;
-            }
-        );
+        m.ForEach(FixMovieImagePaths);
         return m;
     }
 

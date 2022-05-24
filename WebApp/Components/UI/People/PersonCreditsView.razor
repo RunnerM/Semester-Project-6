@@ -2,7 +2,7 @@
 @using WebApp.DataServices.Services.TMDB
 @inject IDataService DataService
 
-@if (Movies == null)
+@if (Movies == null || Movies.Count==0)
 {
     return;
 }

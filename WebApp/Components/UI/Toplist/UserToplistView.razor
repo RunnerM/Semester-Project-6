@@ -7,6 +7,7 @@
 @inject IUserService UserService
 @inject IToplistService ToplistService
 @inject IHttpContextAccessor HttpContextAccessor
+@inject NavigationManager NavigationManager
 
 @if (Items.Count == 0)
 {
@@ -18,8 +19,9 @@ else
         <MudTable AllowUnsorted="false" Items="@Items" Hover="true" Dense="false" Striped="true" Bordered="false" Loading="@_loading">
             <ColGroup>
                 <col style="width: 20%;"/>
-                <col style="width: 30%;"/>
                 <col style="width: 20%;"/>
+                <col style="width: 20%;"/>
+                <col style="width: 10%;"/>
                 <col style="width: 10%;"/>
                 <col style="width: 10%;"/>
                 <col style="width: 10%;"/>
@@ -38,8 +40,9 @@ else
                 <MudTh>Move Up</MudTh>
                 <MudTh>Move Down</MudTh>
                 <MudTh>Remove</MudTh>
+                <MudTh>Go to</MudTh>
             </HeaderContent>
-            <RowTemplate>
+            <RowTemplate @onclick="() => onClick(@context)">
                 <MudTd DataLabel="@nameof(Model.Rank)">@context.Rank</MudTd>
                 <MudTd DataLabel="@nameof(Model.Title)">@context.Title</MudTd>
                 <MudTd DataLabel="@nameof(Model.ReleaseDate)">@context.ReleaseDate</MudTd>
@@ -51,6 +54,9 @@ else
                 </MudTd>
                 <MudTd DataLabel="down">
                     <MudIconButton Size="@Size.Small" Icon="@Icons.Outlined.Delete" Color="Color.Primary" OnClick="@(async () => await OnDelete(@context))"/>
+                </MudTd>
+                <MudTd DataLabel="down">
+                    <MudIconButton Size="@Size.Small" Icon="@Icons.Outlined.Movie" Color="Color.Primary" OnClick="@(async () => await onClick(@context))"/>
                 </MudTd>
             </RowTemplate>
         </MudTable>
@@ -138,5 +144,10 @@ else
         _loading = false;
     }
 
+
+    private async Task onClick(Model context)
+    {
+        NavigationManager.NavigateTo("/movie/" + context.ExtarnalId);
+    }
 
 }

@@ -39,7 +39,7 @@ else
     <MudDivider Vertical="true" Light="true"/>
     <MudPaper Elevation="3">
         <MudStack Row="false">
-            <MudImage Src="@_movie.BackdropPath" ObjectFit="ObjectFit.Cover" Height="400" Style="border-radius: 5px"></MudImage>
+            <MudImage Src="@_movie.BackdropPath" ObjectFit="@Fit"  Height="400" Style="border-radius: 5px"></MudImage>
 
             <MudStack Row="true">
                 <MudText Typo="Typo.h4" Color="Color.Default" Style="padding-left: 10px">Release Date:</MudText>
@@ -67,6 +67,7 @@ else
     public bool toggled { get; set; }
     public string TooltipText { get; set; } = "Add to toplist";
     public bool isRunning { get; set; } = false;
+    public ObjectFit Fit { get; set; }
 
     [Parameter]
     public int movieId { get; set; }
@@ -79,6 +80,7 @@ else
     protected override async Task OnInitializedAsync()
     {
         _movie = await DataService.GetMovieByIdAsync(movieId);
+        Fit = _movie.BackdropPath == "https://i.imgur.com/Lx8aw35.png" ? ObjectFit.Contain : ObjectFit.Cover;
 
         var flag =  _httpContextAccessor.HttpContext.User.Identity.IsAuthenticated;
         
@@ -96,9 +98,6 @@ else
 
             TooltipText = !task ? "Add to toplist" : "Remove from toplist";
         }
-        
-        
-
     }
 
 
@@ -125,5 +124,6 @@ else
     }
 
 
+    
 
 }
