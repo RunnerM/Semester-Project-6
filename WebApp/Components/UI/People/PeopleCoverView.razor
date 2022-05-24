@@ -1,6 +1,6 @@
 @inject NavigationManager NavigationManager
 <MudPaper Style="user-select:none;" Class="d-flex flex-column" MaxWidth="130px" Elevation="3" @onclick="OnClickPerson" >
-    <MudImage ObjectFit="ObjectFit.Contain" Src="@PictureSrc" Width="100" Height="100" Alt="@Title" Elevation="25" Class="rounded-lg ma-4" />
+    <MudImage ObjectFit="Fit" Src="@PictureSrc" Width="100" Height="100" Alt="@Title" Elevation="25" Class="rounded-lg ma-4" />
     <MudText Color="Color.Default" Align="Align.Center" Typo="Typo.caption" >@Title</MudText>
 </MudPaper>
 
@@ -13,6 +13,12 @@
     
     [Parameter]
     public string Id { get; set; }
+    public ObjectFit Fit { get; set; }
+    
+    protected override async Task OnInitializedAsync()
+    {
+        Fit = PictureSrc == "https://i.imgur.com/uiH2cV6.png" ? ObjectFit.Contain : ObjectFit.Cover;
+    }
     
     private void OnClickPerson()
     {
