@@ -2,8 +2,10 @@
 @inject IDataService DataService
 @inject NavigationManager NavigationManager
 
-<MudTextField Adornment="Adornment.End" AdornmentColor="Color.Dark" AdornmentIcon="@Icons.Outlined.Search" @bind-Value="SearchTerm" OnAdornmentClick="@OnSearchClick"  Style="width: 400px; color: white"></MudTextField>
 
+<MudTooltip Text="Search for a movie, star, director .." Arrow="true" Placement="Placement.Bottom">
+<MudTextField Adornment="Adornment.End" AdornmentColor="Color.Dark" AdornmentIcon="@Icons.Outlined.Search" @bind-Value="SearchTerm" OnAdornmentClick="@OnSearchClick"  Style="width: 400px; color: white"></MudTextField>
+</MudTooltip>
 @code {
     public string? SearchTerm { get; set; }
 
@@ -14,8 +16,15 @@
 
     private void OnSearchClick(MouseEventArgs obj)
     {
-        NavigationManager.NavigateTo("/search/" + SearchTerm);
-        StateHasChanged();
+        if (SearchTerm != String.Empty)
+        {
+            NavigationManager.NavigateTo("/search/" + SearchTerm); 
+            StateHasChanged();
+        }
+        
+        
+        
+        
     }
 
 }
